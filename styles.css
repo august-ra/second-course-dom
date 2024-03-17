@@ -1,5 +1,24 @@
+
+:root {
+  --back: #202020;
+  --green: #bcec30;
+}
+
 body {
   margin: 0;
+  background-color: var(--back);
+}
+
+body::-webkit-scrollbar {
+  width: 7px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(-45deg, var(--back) 0%, var(--green) 20px, var(--green) calc(100% - 20px), var(--back) 100%);
+}
+
+.hidden {
+  display: none;
 }
 
 .container {
@@ -10,7 +29,6 @@ body {
   align-items: center;
   padding-top: 80px;
   padding-bottom: 200px;
-  background: #202020;
   min-height: 100vh;
 }
 
@@ -27,11 +45,26 @@ body {
   box-sizing: border-box;
   background: radial-gradient(
           75.42% 75.42% at 50% 42.37%,
-          #353535 22.92%,
+          var(--back) 22.92%,
           #7334ea 100%
   );
   filter: drop-shadow(0px 20px 67px rgba(0, 0, 0, 0.08));
   border-radius: 20px;
+}
+
+.comment:not(.comment--mine) {
+  position: relative;
+  left: -50px;
+}
+
+.comment--mine {
+  background: radial-gradient(
+          75.42% 75.42% at 50% 42.37%,
+          var(--back) 22.92%,
+          #34ea73 100%
+  );
+  position: relative;
+  right: -50px;
 }
 
 .comments {
@@ -103,7 +136,9 @@ body {
   font-size: 16px;
   font-family: "Helvetica", sans-serif;
   border-radius: 8px;
-  border: none;
+  border: 3px solid white;
+  box-sizing: border-box;
+  outline: none;
 }
 
 .add-form-name {
@@ -117,19 +152,34 @@ body {
   resize: none;
 }
 
+.add-form-name:active,
+.add-form-text:active,
+.add-form-name:focus,
+.add-form-text:focus {
+  border: 3px solid var(--green);
+}
+
+.add-form--error {
+  background-color: lightpink;
+}
+
 .add-form-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .add-form-button {
   margin-top: 24px;
-  font-size: 24px;
+  font-size: 22px;
   padding: 10px 20px;
-  background-color: #bcec30;
+  background-color: var(--green);
   border: none;
   border-radius: 18px;
   cursor: pointer;
+}
+
+.add-form-button:disabled {
+  background-color: gray;
 }
 
 .add-form-button:hover {

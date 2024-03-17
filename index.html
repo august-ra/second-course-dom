@@ -9,7 +9,7 @@
 
   <body>
     <div class="container">
-      <ul class="comments">
+      <ul class="comments" id="comment-list">
         <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
@@ -44,6 +44,23 @@
             </div>
           </div>
         </li>
+        <li class="comment comment--mine">
+          <div class="comment-header">
+            <div>@august-ra</div>
+            <div>17.03.24 13:05</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              есть-таки вопросики к дизайнеру.. ))
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">1</span>
+              <button class="like-button"></button>
+            </div>
+          </div>
+        </li>
       </ul>
 
       <div class="add-form">
@@ -52,11 +69,12 @@
         <label class="hidden" for="comment-input">Комментарий:</label>
         <textarea class="add-form-text" placeholder="Введите ваш коментарий" rows="4" id="comment-input"></textarea>
         <div class="add-form-row">
-          <button class="add-form-button">Написать</button>
+          <button class="add-form-button" id="comment-add">Написать</button>
+          <button class="add-form-button" id="comment-remove">Удалить последний комментарий</button>
         </div>
       </div>
     </div>
-  </body>
 
-  <script src="./main.js"></script>
+    <script src="./main.js"></script>
+  </body>
 </html>
