@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
   <head>
     <title>Проект "Комменты"</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="./styles.css">
   </head>
 
   <body>
@@ -39,23 +39,17 @@
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
+              <button class="like-button like-button--active"></button>
             </div>
           </div>
         </li>
       </ul>
+
       <div class="add-form">
-        <input
-          type="text"
-          class="add-form-name"
-          placeholder="Введите ваше имя"
-        />
-        <textarea
-          type="textarea"
-          class="add-form-text"
-          placeholder="Введите ваш коментарий"
-          rows="4"
-        ></textarea>
+        <label class="hidden" for="name-input">Имя:</label>
+        <input class="add-form-name" type="text" placeholder="Введите ваше имя" id="name-input">
+        <label class="hidden" for="comment-input">Комментарий:</label>
+        <textarea class="add-form-text" placeholder="Введите ваш коментарий" rows="4" id="comment-input"></textarea>
         <div class="add-form-row">
           <button class="add-form-button">Написать</button>
         </div>
@@ -63,9 +57,5 @@
     </div>
   </body>
 
-  <script>
-    "use strict";
-    // Код писать здесь
-    console.log("It works!");
-  </script>
+  <script src="./main.js"></script>
 </html>
