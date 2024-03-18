@@ -40,6 +40,10 @@ let takingText = false
 
 btnSubmit.disabled = true
 
+function getValue(element) {
+    return element.value.trim()
+}
+
 function insertInputEmptyStatus(element) {
     element.classList.add("add-form--error")
 }
@@ -49,12 +53,12 @@ function removeEmptyInputStatus(element) {
 }
 
 txtName.addEventListener("dblclick", (e) => {
-    if (!txtName.value && e.button === 0) {
+    if (!getValue(txtName) && e.button === 0) {
         txtName.value = "@august-ra"
 
         removeEmptyInputStatus(txtName)
 
-        if (txtComment.value)
+        if (getValue(txtComment))
             btnSubmit.disabled = false
     }
 })
@@ -74,32 +78,31 @@ txtAll.forEach((element) => element.addEventListener("keydown", (e) => {
 }))
 
 txtAll.forEach((element) => element.addEventListener("keyup", () => {
-    if (txtName.value.length <= 3 || !txtComment.value.length) {
-        if (element === txtComment && !element.value || element === txtName && element.value.length <= 3)
-            insertInputEmptyStatus(element)
-        else
-            removeEmptyInputStatus(element)
+    const name    = getValue(txtName)
+    const comment = getValue(txtComment)
 
-        btnSubmit.disabled = true
-    }
-    else {
+    let forcedBlock       = false
+    let wasErrorInName    = name.length <= 3
+    let wasErrorInComment = !comment
+
+    if (element === txtName && wasErrorInName || element === txtComment && wasErrorInComment)
+        insertInputEmptyStatus(element)
+    else
         removeEmptyInputStatus(element)
-
-        btnSubmit.disabled = false
-    }
 
     if (takingText) {
         removeEmptyInputStatus(element)
 
-        takingText = false
-
-        btnSubmit.disabled = true
+        forcedBlock = true
+        takingText  = false
     }
+
+    btnSubmit.disabled = forcedBlock || wasErrorInName || wasErrorInComment
 }))
 
 btnSubmit.addEventListener("click", () => {
-    let name     = txtName.value
-    let comment  = txtComment.value
+    let name    = getValue(txtName)
+    let comment = getValue(txtComment)
     let isMine = (name === "@august-ra")
 
     if (name.length <= 3 || !comment)
