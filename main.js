@@ -1,5 +1,8 @@
 "use strict"
 
+
+/* common functions */
+
 function zeroPad(num, places) {
     return String(num).padStart(places, '0')
 }
@@ -29,6 +32,42 @@ function printDate(date = null, withSeconds = false) {
     return parts.join('')
 }
 
+
+/* main data */
+
+let data = [
+    {
+        id: 0,
+        name: 'Глеб Фокин',
+        date: '12.02.22 12:18',
+        comment: 'Это будет первый комментарий на этой странице',
+        marks: 3,
+        isLiked: false,
+        isMine: false,
+    },
+    {
+        id: 1,
+        name: 'Варвара Н.',
+        date: '13.02.22 19:22',
+        comment: 'Мне нравится как оформлена эта страница! ❤',
+        marks: 75,
+        isLiked: true,
+        isMine: false,
+    },
+    {
+        id: 2,
+        name: '@august-ra',
+        date: '17.03.24 13:05',
+        comment: 'есть-таки вопросики к дизайнеру.. ))',
+        marks: 1,
+        isLiked: false,
+        isMine: true,
+    },
+]
+
+
+/* common variables */
+
 const lstComments = document.getElementById("comment-list")
 const txtName     = document.getElementById("name-input")
 const txtComment  = document.getElementById("comment-input")
@@ -38,7 +77,13 @@ const txtAll    = [txtName, txtComment]
 
 let takingText = false
 
+
+/* init state for submit */
+
 btnSubmit.disabled = true
+
+
+/* element's working functions */
 
 function getValue(element) {
     return element.value.trim()
@@ -51,6 +96,39 @@ function insertInputEmptyStatus(element) {
 function removeEmptyInputStatus(element) {
     element.classList.remove("add-form--error")
 }
+
+function updateLikeButtons() {
+    document.querySelectorAll(".like-button").forEach((button) => {
+        button.addEventListener("click", () => {
+            const buttonId = Number(button.dataset.id)
+
+            for (const record of data) {
+                if (record.id !== buttonId)
+                    continue
+
+                if (button.classList.contains("like-button--active")) {
+                    button.classList.remove("like-button--active")
+
+                    record.isLiked = false
+                    record.marks  -= 1
+                }
+                else {
+                    button.classList.add("like-button--active")
+
+                    record.isLiked = true
+                    record.marks  += 1
+                }
+
+                break
+            }
+
+            render()
+        })
+    })
+}
+
+
+/* listeners */
 
 txtName.addEventListener("dblclick", (e) => {
     if (!getValue(txtName) && e.button === 0) {
@@ -113,24 +191,19 @@ btnSubmit.addEventListener("click", () => {
 
     txtName.focus()
 
-    lstComments.innerHTML += `
-        <li class="comment${isMine ? " comment--mine" : ""}">
-          <div class="comment-header">
-            <div>${name}</div>
-            <div>${printDate()}</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${comment}
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>`
+    const count = new Date().getTime()
+
+    data.push({
+        id: count,
+        name: name,
+        date: printDate(),
+        comment: comment,
+        marks: 0,
+        isLiked: false,
+        isMine: isMine,
+    })
+
+    render()
 })
 
 btnRemove.addEventListener("click", () => {
@@ -141,3 +214,39 @@ btnRemove.addEventListener("click", () => {
 
     lstComments.removeChild(lstComments.children[index])
 })
+
+
+/* render function */
+
+function render() {
+    lstComments.innerHTML = data.map((record) => {
+        const commentCl = `comment${record.isMine ? " comment--mine" : ""}`
+        const buttonCl  = `like-button${record.isLiked ? " like-button--active" : ""}`
+        const dataId = `data-id="${record.id}"`
+
+        return `<li class="${commentCl}">
+          <div class="comment-header">
+            <div>${record.name}</div>
+            <div>${record.date}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${record.comment}
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter" ${dataId}>${record.marks}</span>
+              <button class="${buttonCl}" ${dataId}></button>
+            </div>
+          </div>
+        </li>`
+    }).join('')
+
+    updateLikeButtons()
+}
+
+
+/* start */
+
+render()
