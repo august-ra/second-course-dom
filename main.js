@@ -201,12 +201,11 @@ btnSubmit.addEventListener("click", () => {
 })
 
 btnRemove.addEventListener("click", () => {
-    const index = lstComments.children.length - 1
-
-    if (index < 0)
+    if (lstComments.children.length === 0)
         return
 
-    lstComments.removeChild(lstComments.children[index])
+    data.pop()
+    render()
 })
 
 
