@@ -100,26 +100,20 @@ function removeEmptyInputStatus(element) {
 function updateLikeButtons() {
     document.querySelectorAll(".like-button").forEach((button) => {
         button.addEventListener("click", () => {
-            const buttonId = Number(button.dataset.id)
+            const recordId = Number(button.dataset.id)
+            const record = data[recordId]
 
-            for (const record of data) {
-                if (record.id !== buttonId)
-                    continue
+            if (button.classList.contains("like-button--active")) {
+                button.classList.remove("like-button--active")
 
-                if (button.classList.contains("like-button--active")) {
-                    button.classList.remove("like-button--active")
+                record.isLiked = false
+                record.marks  -= 1
+            }
+            else {
+                button.classList.add("like-button--active")
 
-                    record.isLiked = false
-                    record.marks  -= 1
-                }
-                else {
-                    button.classList.add("like-button--active")
-
-                    record.isLiked = true
-                    record.marks  += 1
-                }
-
-                break
+                record.isLiked = true
+                record.marks  += 1
             }
 
             render()
