@@ -16,7 +16,7 @@ function printDate(date = null, withSeconds = false) {
     const parts = []
     parts.push(zeroPad(date.getDate(), 2))
     parts.push(".")
-    parts.push(zeroPad(date.getMonth(), 2))
+    parts.push(zeroPad(date.getMonth() + 1, 2))
     parts.push(".")
     parts.push(date.getFullYear().toString().substring(2))
     parts.push(" ")
