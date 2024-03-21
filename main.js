@@ -1,10 +1,15 @@
 "use strict"
 
+
+import { comments } from "./comments.js"
+
+/* common functions */
+
 function zeroPad(num, places) {
     return String(num).padStart(places, '0')
 }
 
-function printDate(date = null, withSeconds = false) {
+Date.prototype.print = (date = null, withSeconds = false) => {
     if (date === null)
         date = new Date()
     else if (typeof date === "string")
@@ -13,7 +18,7 @@ function printDate(date = null, withSeconds = false) {
     const parts = []
     parts.push(zeroPad(date.getDate(), 2))
     parts.push(".")
-    parts.push(zeroPad(date.getMonth(), 2))
+    parts.push(zeroPad(date.getMonth() + 1, 2))
     parts.push(".")
     parts.push(date.getFullYear().toString().substring(2))
     parts.push(" ")
@@ -29,6 +34,9 @@ function printDate(date = null, withSeconds = false) {
     return parts.join('')
 }
 
+
+/* common variables */
+
 const lstComments = document.getElementById("comment-list")
 const txtName     = document.getElementById("name-input")
 const txtComment  = document.getElementById("comment-input")
@@ -38,7 +46,13 @@ const txtAll    = [txtName, txtComment]
 
 let takingText = false
 
+
+/* init state for submit */
+
 btnSubmit.disabled = true
+
+
+/* element's working functions */
 
 function getValue(element) {
     return element.value.trim()
@@ -51,6 +65,20 @@ function insertInputEmptyStatus(element) {
 function removeEmptyInputStatus(element) {
     element.classList.remove("add-form--error")
 }
+
+function updateLikeButtons() {
+    document.querySelectorAll(".like-button").forEach((button) => {
+        button.addEventListener("click", () => {
+            const recordId = Number(button.dataset.id)
+            comments.updateLikeStatus(recordId)
+
+            render()
+        })
+    })
+}
+
+
+/* listeners */
 
 txtName.addEventListener("dblclick", (e) => {
     if (!getValue(txtName) && e.button === 0) {
@@ -103,7 +131,6 @@ txtAll.forEach((element) => element.addEventListener("keyup", () => {
 btnSubmit.addEventListener("click", () => {
     let name    = getValue(txtName)
     let comment = getValue(txtComment)
-    let isMine = (name === "@august-ra")
 
     if (name.length <= 3 || !comment)
         return
@@ -113,31 +140,30 @@ btnSubmit.addEventListener("click", () => {
 
     txtName.focus()
 
-    lstComments.innerHTML += `
-        <li class="comment${isMine ? " comment--mine" : ""}">
-          <div class="comment-header">
-            <div>${name}</div>
-            <div>${printDate()}</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${comment}
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>`
+    comments.addRecord(name, comment)
+
+    render()
 })
 
 btnRemove.addEventListener("click", () => {
-    const index = lstComments.children.length - 1
-
-    if (index < 0)
+    if (lstComments.children.length === 0)
         return
 
-    lstComments.removeChild(lstComments.children[index])
+    comments.deleteLast()
+
+    render()
 })
+
+
+/* render function */
+
+function render() {
+    lstComments.innerHTML = comments.printListItems()
+
+    updateLikeButtons()
+}
+
+
+/* start */
+
+render()
