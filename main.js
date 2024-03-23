@@ -211,12 +211,24 @@ btnSubmit.addEventListener("click", () => {
     if (name.length <= 3 || !comment)
         return
 
+    document.querySelector(".add-form-row").scrollIntoView()
+
        txtName.focus()
        txtName.value = ""
       txtQuote.value = ""
     txtComment.value = ""
 
-    comments.addRecord(name.sterilize(), comment.sterilize(), Number(quoteID))
+    boxQuote.innerHTML = ""
+    txtQuote.value     = ""
+
+    txtComment.style.paddingTop = "22px"
+
+    const element = boxQuote.parentElement
+    element.style.transition = ""
+    element.style.opacity    = "0"
+    element.style.left       = "75px"
+
+    comments.addRecord(name.sterilize(), comment.sterilize(), quoteID)
 
     render()
 })
