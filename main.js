@@ -228,6 +228,8 @@ btnSubmit.addEventListener("click", () => {
     element.style.opacity    = "0"
     element.style.left       = "75px"
 
+    btnSubmit.disabled = true
+
     comments.addRecord(name.sterilize(), comment.sterilize(), quoteID)
 
     render()

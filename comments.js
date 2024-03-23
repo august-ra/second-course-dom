@@ -37,7 +37,7 @@ export const comments = {
             name:    "@august-ra",
             date:    "23.03.24 23:32",
             quoteID: "1",
-            comment: "Варвара Н., неужели? )) дизайн, конечно, бомба..",
+            comment: "Варвара Н., дизайн, конечно, бомба.. ))",
             marks:   1,
             isLiked: false,
             isMine:  true,
