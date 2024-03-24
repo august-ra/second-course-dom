@@ -37,10 +37,10 @@ Date.prototype.print = (date = null, withSeconds = false) => {
 
 String.prototype.sterilize = function () {
     return this
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace("/", "&sol;")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("/", "&sol;")
 }
 
 
