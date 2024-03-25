@@ -2,6 +2,7 @@
 :root {
   --back: #202020;
   --green: #bcec30;
+  --padding-for-comment: 22px;
 }
 
 body {
@@ -93,6 +94,14 @@ body::-webkit-scrollbar-thumb {
   margin-bottom: 32px;
 }
 
+.comment-quote {
+  background-color: gray;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border-left: 8px solid var(--green);
+}
+
 .comment-text {
   font-size: 32px;
 }
@@ -131,6 +140,58 @@ body::-webkit-scrollbar-thumb {
   flex-direction: column;
 }
 
+.comment-editor {
+  position: relative;
+  width: 100%;
+}
+
+.quote {
+  position: absolute;
+  top: 15px;
+  left: 75px;
+  width: calc(100% - 44px);
+  min-height: 20px;
+  color: black;
+  background-color: silver;
+  border-left: 8px solid var(--green);
+  border-radius: 15px;
+  margin-top: 12px;
+  padding: 15px;
+  box-sizing: border-box;
+  opacity: 0;
+
+  &.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+  }
+}
+
+.quote--invisible {
+  transition: opacity 0.7s ease-in-out, left 0.6s ease-in-out;
+  opacity: 0;
+  left: 75px;
+}
+
+.quote--visible {
+  transition: opacity 0.4s ease-in-out, left 0.6s ease-in-out;
+  opacity: 1;
+  left: 22px;
+}
+
+.cancel-quote-button {
+  width: 27px;
+  font-size: 22px;
+  background-color: var(--green);
+  border: none;
+  border-radius: 15px;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
 .add-form-name,
 .add-form-text {
   font-size: 16px;
@@ -147,9 +208,20 @@ body::-webkit-scrollbar-thumb {
 }
 
 .add-form-text {
+  width: 100%;
   margin-top: 12px;
   padding: 22px;
   resize: none;
+}
+
+.add-form-text--alone {
+  transition: padding-top 0.7s ease-in-out;
+  padding-top: 22px;
+}
+
+.add-form-text--inclusive {
+  transition: padding-top 0.18s ease-in-out;
+  padding-top: var(--padding-for-comment);
 }
 
 .add-form-name:active,
