@@ -2,6 +2,7 @@
 :root {
   --back: #202020;
   --green: #bcec30;
+  --padding-for-comment: 22px;
 }
 
 body {
@@ -167,6 +168,18 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
+.quote--invisible {
+  transition: opacity 0.7s ease-in-out, left 0.6s ease-in-out;
+  opacity: 0;
+  left: 75px;
+}
+
+.quote--visible {
+  transition: opacity 0.4s ease-in-out, left 0.6s ease-in-out;
+  opacity: 1;
+  left: 22px;
+}
+
 .cancel-quote-button {
   width: 27px;
   font-size: 22px;
@@ -199,6 +212,16 @@ body::-webkit-scrollbar-thumb {
   margin-top: 12px;
   padding: 22px;
   resize: none;
+}
+
+.add-form-text--alone {
+  transition: padding-top 0.7s ease-in-out;
+  padding-top: 22px;
+}
+
+.add-form-text--inclusive {
+  transition: padding-top 0.18s ease-in-out;
+  padding-top: var(--padding-for-comment);
 }
 
 .add-form-name:active,

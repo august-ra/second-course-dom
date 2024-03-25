@@ -46,6 +46,7 @@ String.prototype.sterilize = function () {
 
 /* common variables */
 
+const root      = document.querySelector(":root")
 const lstComments = document.getElementById("comment-list")
 const txtName     = document.getElementById("name-input")
 const txtQuote    = document.getElementById("quote-input")
@@ -94,12 +95,17 @@ function updateCommentBoxes() {
             txtComment.value = comments.printQuote(recordId, boxQuote)
 
             const element = boxQuote.parentElement
-            txtComment.style.transition = "padding-top 0.18s ease-in-out"
-            txtComment.style.paddingTop = `${element.clientHeight + 26}px`
 
-            element.style.transition = "opacity 0.4s ease-in-out, left 0.6s ease-in-out"
-            element.style.opacity    = "1"
-            element.style.left       = "22px"
+            root.style.setProperty(
+                "--padding-for-comment",
+                `${element.clientHeight + 26}px`
+            )
+
+            txtComment.classList.add("add-form-text--inclusive")
+            txtComment.classList.remove("add-form-text--alone")
+
+            element.classList.add("quote--visible")
+            element.classList.remove("quote--invisible")
         })
     })
 }
@@ -194,13 +200,12 @@ btnCancelQ.addEventListener("click", () => {
     boxQuote.innerHTML = ""
     txtQuote.value     = ""
 
-    txtComment.style.transition = "padding-top 0.7s ease-in-out"
-    txtComment.style.paddingTop = "22px"
+    txtComment.classList.add("add-form-text--alone")
+    txtComment.classList.remove("add-form-text--inclusive")
 
     const element = boxQuote.parentElement
-    element.style.transition = "opacity 0.7s ease-in-out, left 0.6s ease-in-out"
-    element.style.opacity    = "0"
-    element.style.left       = "75px"
+    element.classList.add("quote--invisible")
+    element.classList.remove("quote--visible")
 })
 
 btnSubmit.addEventListener("click", () => {
@@ -221,12 +226,12 @@ btnSubmit.addEventListener("click", () => {
     boxQuote.innerHTML = ""
     txtQuote.value     = ""
 
-    txtComment.style.paddingTop = "22px"
+    txtComment.classList.add("add-form-text--alone")
+    txtComment.classList.remove("add-form-text--inclusive")
 
     const element = boxQuote.parentElement
-    element.style.transition = ""
-    element.style.opacity    = "0"
-    element.style.left       = "75px"
+    element.classList.add("quote--invisible")
+    element.classList.remove("quote--visible")
 
     btnSubmit.disabled = true
 
