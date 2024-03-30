@@ -1,48 +1,7 @@
 "use strict"
 
 export const comments = {
-    data: [
-        {
-            id:      0,
-            name:    "Глеб Фокин",
-            date:    "12.02.22 12:18",
-            quoteID: "",
-            comment: "Это будет первый комментарий на этой странице",
-            marks:   3,
-            isLiked: false,
-            isMine:  false,
-        },
-        {
-            id:      1,
-            name:    "Варвара Н.",
-            date:    "13.02.22 19:22",
-            quoteID: "",
-            comment: "Мне нравится, как оформлена эта страница! ❤",
-            marks:   75,
-            isLiked: true,
-            isMine:  false,
-        },
-        {
-            id:      2,
-            name:    "@august-ra",
-            date:    "17.03.24 13:05",
-            quoteID: "",
-            comment: "есть-таки вопросики к дизайнеру.. ))",
-            marks:   1,
-            isLiked: false,
-            isMine:  true,
-        },
-        {
-            id:      3,
-            name:    "@august-ra",
-            date:    "23.03.24 23:32",
-            quoteID: "1",
-            comment: "Варвара Н., дизайн, конечно, бомба.. ))",
-            marks:   1,
-            isLiked: false,
-            isMine:  true,
-        },
-    ],
+    data: [],
 
     addRecord(name, comment, quoteID="") {
         const isMine = (name === "@august-ra")
@@ -121,5 +80,52 @@ export const comments = {
                 </div>
             </li>`
         }).join('')
+    },
+
+    getCommentsFromServer(do_render) {
+        fetch("https://wedev-api.sky.pro/api/v1/@august-ra/comments")
+            .then((response) => response.json())
+            .then((data) => {
+                this.data = data.comments.map((record) => {
+                    return {
+                        id:      record.id,
+                        name:    record.author.name,
+                        date:    record.date,
+                        quoteID: "",
+                        comment: record.text,
+                        marks:   record.likes,
+                        isLiked: record.isLiked,
+                        isMine:  (record.author.name === "@august-ra"),
+                    }
+                })
+
+                do_render()
+            })
+            .catch((error) => console.log(error))
+    },
+
+    sendCommentToServer(name, comment, do_render) {
+        const params = {
+            method: "POST",
+            body: JSON.stringify({
+                name: name,
+                text: comment,
+            })
+        }
+        let statusCode = 0
+
+        fetch("https://wedev-api.sky.pro/api/v1/@august-ra/comments", params)
+            .then((response) => {
+                statusCode = response.status
+
+                return response.json()
+            })
+            .then((data) => {
+                if (statusCode === 400)
+                    throw new Error(data.error)
+
+                this.getCommentsFromServer(do_render)
+            })
+            .catch((error) => console.log(error))
     },
 }
