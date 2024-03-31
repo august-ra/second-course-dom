@@ -1,7 +1,9 @@
 "use strict"
 
+
 export const comments = {
     data: [],
+    remoteURI: "https://wedev-api.sky.pro/api/v1/@august-ra/comments",
 
     addRecord(name, comment, quoteID="") {
         const isMine = (name === "@august-ra")
@@ -83,7 +85,7 @@ export const comments = {
     },
 
     getCommentsFromServer(do_render) {
-        fetch("https://wedev-api.sky.pro/api/v1/@august-ra/comments")
+        fetch(this.remoteURI)
             .then((response) => response.json())
             .then((data) => {
                 this.data = data.comments.map((record) => {
@@ -114,7 +116,7 @@ export const comments = {
         }
         let statusCode = 0
 
-        fetch("https://wedev-api.sky.pro/api/v1/@august-ra/comments", params)
+        fetch(this.remoteURI, params)
             .then((response) => {
                 statusCode = response.status
 
