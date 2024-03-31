@@ -9,6 +9,15 @@
 
   <body>
     <div class="container">
+      <div class="mode flex">
+        <div class="mode-inactive mode-active" id="cute-mode">Cute mode</div>
+        <div class="thumb flex">
+          <div class="slot" id="slot-button"></div>
+          <div class="arm" id="arm-button"></div>
+        </div>
+        <div class="mode-inactive" id="devil-mode">Devil mode</div>
+      </div>
+
       <ul class="comments" id="comment-list">
         <!-- vacant -->
       </ul>
@@ -40,5 +49,6 @@
     </div>
 
     <script type="module" src="./main.js"></script>
+    <script type="module" src="./thumb.js"></script>
   </body>
 </html>

@@ -1,7 +1,17 @@
 
 :root {
   --back: #202020;
-  --green: #bcec30;
+  --pear: #bcec30;
+  --purple: #7334ea;
+  --green: #34ea73;
+  --red: #bb0f0f;
+  --mine: var(--green);
+  --others: var(--purple);
+  --active: var(--pear);
+  --disabled: gray;
+  --scroll: var(--pear);
+  --heart-empty: url("img/heart-standard-empty.svg");
+  --heart-filled: url("img/heart-standard-filled.svg");
   --padding-for-comment: 22px;
 }
 
@@ -15,7 +25,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-  background: linear-gradient(-45deg, var(--back) 0%, var(--green) 20px, var(--green) calc(100% - 20px), var(--back) 100%);
+  background: linear-gradient(-45deg, var(--back) 0%, var(--scroll) 20px, var(--scroll) calc(100% - 20px), var(--back) 100%);
 }
 
 .hidden {
@@ -33,6 +43,104 @@ body::-webkit-scrollbar-thumb {
   min-height: 100vh;
 }
 
+.mode {
+  margin-bottom: 45px;
+
+  &.flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.mode-inactive {
+  transition: text-shadow 0.5s ease-in-out;
+}
+
+.mode-active {
+  text-shadow: 0 0 15px var(--green);
+}
+
+#devil-mode.mode-active {
+  /*text-shadow: 0 0 15px var(--red);*/
+  text-shadow: 0 0 5px #bb0f0f, 0 0 10px #bb0f0f, 0 0 10px #bb0f0f;
+}
+
+.thumb {
+  position: relative;
+
+  &.flex {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.slot {
+  width: 40px;
+  height: 9px;
+  border-radius: 15px;
+  background-color: var(--others);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.arm {
+  position: absolute;
+  left: 1px;
+  bottom: -5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 15px;
+  background-color: var(--active);
+  transition: left 0.5s ease-in-out, bottom 1.9s cubic-bezier(0, 0, 0.93,-0.18);
+  /*animation: broken-arm 1.5s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;*/
+}
+
+.arm--broken {
+  transform-origin: bottom;
+  animation: broken-arm 1.2s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+}
+
+@keyframes broken-arm {
+  from {
+    left: 1px;
+    bottom: -5px;
+  }
+  30% {
+    left: 19px;
+    bottom: -5px;
+  }
+  47% {
+    left: 22px;
+    bottom: -15px;
+  }
+  60% {
+    left: 24px;
+    bottom: -48px;
+  }
+  80% {
+    left: 27px;
+    bottom: -43px;
+    transform: scaleY(0.9);
+  }
+  90% {
+    left: 29px;
+    bottom: -48px;
+    transform: scaleY(0.96);
+  }
+  97% {
+    left: 30px;
+    bottom: -46px;
+  }
+  100% {
+    left: 31px;
+    bottom: -48px;
+  }
+}
+
+.arm-changed {
+  left: 19px;
+}
+
 .comments,
 .comment {
   margin: 0;
@@ -47,7 +155,7 @@ body::-webkit-scrollbar-thumb {
   background: radial-gradient(
           75.42% 75.42% at 50% 42.37%,
           var(--back) 22.92%,
-          #7334ea 100%
+          var(--others) 100%
   );
   filter: drop-shadow(0px 20px 67px rgba(0, 0, 0, 0.08));
   border-radius: 20px;
@@ -62,7 +170,7 @@ body::-webkit-scrollbar-thumb {
   background: radial-gradient(
           75.42% 75.42% at 50% 42.37%,
           var(--back) 22.92%,
-          #34ea73 100%
+          var(--mine) 100%
   );
   position: relative;
   right: -50px;
@@ -95,11 +203,11 @@ body::-webkit-scrollbar-thumb {
 }
 
 .comment-quote {
-  background-color: gray;
+  background-color: var(--disabled);
   padding: 15px;
   margin-bottom: 15px;
   border-radius: 10px;
-  border-left: 8px solid var(--green);
+  border-left: 8px solid var(--active);
 }
 
 .comment-text {
@@ -123,14 +231,21 @@ body::-webkit-scrollbar-thumb {
 
 .like-button {
   margin-left: 10px;
-  background-image: url("./img/heart-empty.svg");
+  background-image: var(--heart-empty);
   background-repeat: no-repeat;
   width: 22px;
   height: 22px;
 }
 
 .like-button--active {
-  background-image: url("./img/heart-filled.svg");
+  background-image: var(--heart-filled);
+}
+
+.comment--mine .like-button {
+  background-image: url("./img/heart-mine-empty.svg");
+}
+.comment--mine .like-button--active {
+  background-image: url("./img/heart-mine-filled.svg");
 }
 
 .add-form {
@@ -153,12 +268,13 @@ body::-webkit-scrollbar-thumb {
   min-height: 20px;
   color: black;
   background-color: silver;
-  border-left: 8px solid var(--green);
+  border-left: 8px solid var(--active);
   border-radius: 15px;
   margin-top: 12px;
   padding: 15px;
   box-sizing: border-box;
   opacity: 0;
+  pointer-events: none;
 
   &.flex {
     display: flex;
@@ -169,21 +285,23 @@ body::-webkit-scrollbar-thumb {
 }
 
 .quote--invisible {
-  transition: opacity 0.7s ease-in-out, left 0.6s ease-in-out;
-  opacity: 0;
+  transition: left 0.6s ease-in-out, opacity 0.7s ease-in-out;
   left: 75px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .quote--visible {
-  transition: opacity 0.4s ease-in-out, left 0.6s ease-in-out;
-  opacity: 1;
+  transition: left 0.6s ease-in-out, opacity 0.4s ease-in-out;
   left: 22px;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .cancel-quote-button {
   width: 27px;
   font-size: 22px;
-  background-color: var(--green);
+  background-color: var(--active);
   border: none;
   border-radius: 15px;
 
@@ -228,7 +346,7 @@ body::-webkit-scrollbar-thumb {
 .add-form-text:active,
 .add-form-name:focus,
 .add-form-text:focus {
-  border: 3px solid var(--green);
+  border: 3px solid var(--active);
 }
 
 .add-form--error {
@@ -244,14 +362,14 @@ body::-webkit-scrollbar-thumb {
   margin-top: 24px;
   font-size: 22px;
   padding: 10px 20px;
-  background-color: var(--green);
+  background-color: var(--active);
   border: none;
   border-radius: 18px;
   cursor: pointer;
 }
 
 .add-form-button:disabled {
-  background-color: gray;
+  background-color: var(--disabled);
 }
 
 .add-form-button:hover {
