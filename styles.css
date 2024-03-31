@@ -354,12 +354,15 @@ body::-webkit-scrollbar-thumb {
 }
 
 .add-form-row {
-  display: flex;
-  justify-content: space-between;
+  margin-top: 24px;
+
+  &.flex {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .add-form-button {
-  margin-top: 24px;
   font-size: 22px;
   padding: 10px 20px;
   background-color: var(--active);
