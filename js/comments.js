@@ -84,7 +84,7 @@ export const comments = {
         }).join('')
     },
 
-    getCommentsFromServer(do_render) {
+    getCommentsFromServer(doRender, changeLoading) {
         fetch(this.remoteURI)
             .then((response) => response.json())
             .then((data) => {
@@ -101,12 +101,14 @@ export const comments = {
                     }
                 })
 
-                do_render()
+                changeLoading(false)
+
+                doRender()
             })
-            .catch((error) => console.log(error))
+            .catch((error) => handleError(error, changeLoading))
     },
 
-    sendCommentToServer(name, comment, do_render) {
+    sendCommentToServer(name, comment, doRender, changeLoading) {
         const params = {
             method: "POST",
             body: JSON.stringify({
@@ -126,8 +128,15 @@ export const comments = {
                 if (statusCode === 400)
                     throw new Error(data.error)
 
-                this.getCommentsFromServer(do_render)
+                this.getCommentsFromServer(doRender, changeLoading)
             })
-            .catch((error) => console.log(error))
+            .catch((error) => handleError(error, changeLoading))
     },
+}
+
+
+function handleError(error, changeLoading) {
+    alert(error)
+
+    changeLoading(false)
 }

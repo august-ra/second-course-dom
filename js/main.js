@@ -56,6 +56,7 @@ const lblQuote    = document.getElementById("quote-text")
 const btnCancelQ  = document.getElementById("quote-cancel")
 const btnSubmit   = document.getElementById("comment-add")
 const btnRemove   = document.getElementById("comment-remove")
+const gifLoader   = document.getElementById("loader")
 const txtAll    = [txtName, txtComment]
 
 let takingText = false
@@ -75,6 +76,12 @@ function jumpTo(element) {
 
 function getValue(element) {
     return element.value.trim()
+}
+
+function clearInputs() {
+       txtName.value = ""
+      txtQuote.value = ""
+    txtComment.value = ""
 }
 
 function insertInputEmptyStatus(element) {
@@ -137,6 +144,12 @@ function updateLikeButtons() {
     })
 }
 
+function updateLoadingState(show) {
+    if (show)
+        gifLoader.classList.remove("hidden")
+    else
+        gifLoader.classList.add("hidden")
+}
 
 /* listeners */
 
@@ -183,6 +196,8 @@ txtAll.forEach((element) => element.addEventListener("keyup", () => {
 
         forcedBlock = true
         takingText  = false
+    } else if (!gifLoader.classList.contains("hidden")) {
+        forcedBlock = true
     }
 
     btnSubmit.disabled = forcedBlock || wasErrorInName || wasErrorInComment
@@ -220,17 +235,16 @@ btnSubmit.addEventListener("click", () => {
         return
 
     document.querySelector(".add-form-row").scrollIntoView()
+    updateLoadingState(true)
+
+    clearInputs()
 
        txtName.focus()
-       txtName.value = ""
-      txtQuote.value = ""
-    txtComment.value = ""
-
     btnCancelQ.click()
 
     btnSubmit.disabled = true
 
-    comments.sendCommentToServer(name.sterilize(), comment.sterilize(), render)
+    comments.sendCommentToServer(name.sterilize(), comment.sterilize(), render, updateLoadingState)
 })
 
 btnRemove.addEventListener("click", () => {
@@ -256,4 +270,4 @@ function render() {
 
 /* start */
 
-comments.getCommentsFromServer(render)
+comments.getCommentsFromServer(render, updateLoadingState)
