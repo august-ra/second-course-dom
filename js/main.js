@@ -68,13 +68,13 @@ btnSubmit.disabled = true
 
 /* element's working functions */
 
-function getValue(element) {
-    return element.value.trim()
-}
-
 function jumpTo(element) {
     if (element)
         element.scrollIntoView({behavior: "smooth"})
+}
+
+function getValue(element) {
+    return element.value.trim()
 }
 
 function insertInputEmptyStatus(element) {
