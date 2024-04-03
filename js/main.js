@@ -51,10 +51,12 @@ const lstComments = document.getElementById("comment-list")
 const txtName     = document.getElementById("name-input")
 const txtQuote    = document.getElementById("quote-input")
 const txtComment  = document.getElementById("comment-input")
-const boxQuote    = document.getElementById("quote-text")
+const boxQuote    = document.getElementById("quote-box")
+const lblQuote    = document.getElementById("quote-text")
 const btnCancelQ  = document.getElementById("quote-cancel")
 const btnSubmit   = document.getElementById("comment-add")
 const btnRemove   = document.getElementById("comment-remove")
+const gifLoader   = document.getElementById("loader")
 const txtAll    = [txtName, txtComment]
 
 let takingText = false
@@ -67,13 +69,19 @@ btnSubmit.disabled = true
 
 /* element's working functions */
 
+function jumpTo(element) {
+    if (element)
+        element.scrollIntoView({behavior: "smooth"})
+}
+
 function getValue(element) {
     return element.value.trim()
 }
 
-function jumpTo(element) {
-    if (element)
-        element.scrollIntoView({behavior: "smooth"})
+function clearInputs() {
+       txtName.value = ""
+      txtQuote.value = ""
+    txtComment.value = ""
 }
 
 function insertInputEmptyStatus(element) {
@@ -92,9 +100,9 @@ function updateCommentBoxes() {
             const recordId = Number(box.dataset.id)
 
               txtQuote.value = recordId
-            txtComment.value = comments.printQuote(recordId, boxQuote)
+            txtComment.value = comments.printQuote(recordId, lblQuote)
 
-            const element = boxQuote.parentElement
+            const element = lblQuote.parentElement
 
             root.style.setProperty(
                 "--padding-for-comment",
@@ -136,6 +144,12 @@ function updateLikeButtons() {
     })
 }
 
+function updateLoadingState(show) {
+    if (show)
+        gifLoader.classList.remove("hidden")
+    else
+        gifLoader.classList.add("hidden")
+}
 
 /* listeners */
 
@@ -182,6 +196,8 @@ txtAll.forEach((element) => element.addEventListener("keyup", () => {
 
         forcedBlock = true
         takingText  = false
+    } else if (!gifLoader.classList.contains("hidden")) {
+        forcedBlock = true
     }
 
     btnSubmit.disabled = forcedBlock || wasErrorInName || wasErrorInComment
@@ -196,16 +212,18 @@ boxQuote.addEventListener("click", (e) => {
     jumpTo(element)
 })
 
-btnCancelQ.addEventListener("click", () => {
-    boxQuote.innerHTML = ""
+btnCancelQ.addEventListener("click", (e) => {
+    lblQuote.innerHTML = ""
     txtQuote.value     = ""
 
     txtComment.classList.add("add-form-text--alone")
     txtComment.classList.remove("add-form-text--inclusive")
 
-    const element = boxQuote.parentElement
+    const element = lblQuote.parentElement
     element.classList.add("quote--invisible")
     element.classList.remove("quote--visible")
+
+    e.stopPropagation()
 })
 
 btnSubmit.addEventListener("click", () => {
@@ -217,27 +235,16 @@ btnSubmit.addEventListener("click", () => {
         return
 
     document.querySelector(".add-form-row").scrollIntoView()
+    updateLoadingState(true)
+
+    clearInputs()
 
        txtName.focus()
-       txtName.value = ""
-      txtQuote.value = ""
-    txtComment.value = ""
-
-    boxQuote.innerHTML = ""
-    txtQuote.value     = ""
-
-    txtComment.classList.add("add-form-text--alone")
-    txtComment.classList.remove("add-form-text--inclusive")
-
-    const element = boxQuote.parentElement
-    element.classList.add("quote--invisible")
-    element.classList.remove("quote--visible")
+    btnCancelQ.click()
 
     btnSubmit.disabled = true
 
-    comments.addRecord(name.sterilize(), comment.sterilize(), quoteID)
-
-    render()
+    comments.sendCommentToServer(name.sterilize(), comment.sterilize(), render, updateLoadingState)
 })
 
 btnRemove.addEventListener("click", () => {
@@ -263,4 +270,4 @@ function render() {
 
 /* start */
 
-render()
+comments.getCommentsFromServer(render, updateLoadingState)

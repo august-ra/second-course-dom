@@ -9,6 +9,15 @@
 
   <body>
     <div class="container">
+      <div class="mode flex">
+        <div class="mode-inactive mode-active" id="cute-mode">Cute mode</div>
+        <div class="thumb flex">
+          <div class="slot" id="slot-button"></div>
+          <div class="arm" id="arm-button"></div>
+        </div>
+        <div class="mode-inactive" id="devil-mode">Devil mode</div>
+      </div>
+
       <ul class="comments" id="comment-list">
         <!-- vacant -->
       </ul>
@@ -21,7 +30,7 @@
         <input class="add-form-name hidden" type="text" id="quote-input">
 
         <div class="comment-editor">
-          <div class="quote flex">
+          <div class="quote flex" id="quote-box">
             <div class="left" id="quote-text">
               <!-- vacant -->
             </div>
@@ -32,13 +41,15 @@
           <textarea class="add-form-text" placeholder="Введите ваш коментарий" rows="4" id="comment-input"></textarea>
         </div>
 
-        <div class="add-form-row">
+        <div class="add-form-row flex">
           <button class="add-form-button" id="comment-add">Написать</button>
+          <span class="loader hidden" id="loader"></span>
           <button class="add-form-button" id="comment-remove">Удалить последний комментарий</button>
         </div>
       </div>
     </div>
 
-    <script type="module" src="./main.js"></script>
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/thumb.js"></script>
   </body>
 </html>
