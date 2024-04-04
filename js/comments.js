@@ -92,7 +92,7 @@ export const comments = {
                     return {
                         id:      record.id,
                         name:    record.author.name,
-                        date:    record.date,
+                        date:    new Date(record.date).print(),
                         quoteID: "",
                         comment: record.text,
                         marks:   record.likes,
