@@ -16,10 +16,14 @@ const timerId =  setInterval(() => {
             return `${leftPart}<span style="opacity: 0">${"".padEnd(3 - cnt, ".")}</span>`
     })()
 
-    if (counter < 9)
-        lstComments.innerHTML = `<li>Пожалуйста, подождите, идёт первая загрузка${dots}</li>`
-    else
-        lstComments.innerHTML = `<li>Загрузка идёт слишком долго, но, пожалуйста, подождите ещё${dots}</li>`
+    const text = (() => {
+        if (counter < 9)
+            return "Пожалуйста, подождите, идёт первая загрузка"
+        else
+            return "Загрузка идёт слишком долго, но, пожалуйста, подождите ещё"
+    })()
+
+    lstComments.innerHTML = `<li>${text}${dots}</li>`
 }, 400)
 
 export function clearIntroducer() {
