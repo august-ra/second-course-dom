@@ -17,9 +17,9 @@ const timerId =  setInterval(() => {
     })()
 
     if (counter < 9)
-        lstComments.innerHTML = `<div>Пожалуйста, подождите, идёт первая загрузка${dots}</div>`
+        lstComments.innerHTML = `<li>Пожалуйста, подождите, идёт первая загрузка${dots}</li>`
     else
-        lstComments.innerHTML = `<div>Загрузка идёт слишком долго, но, пожалуйста, подождите ещё${dots}</div>`
+        lstComments.innerHTML = `<li>Загрузка идёт слишком долго, но, пожалуйста, подождите ещё${dots}</li>`
 }, 400)
 
 export function clearIntroducer() {
