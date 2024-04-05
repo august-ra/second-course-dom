@@ -238,13 +238,16 @@ btnSubmit.addEventListener("click", () => {
     if (name.length <= 3 || !comment)
         return
 
+    name    =    name.sterilize()
+    comment = comment.sterilize()
+
     updateLoadingState(true)
        txtName.focus()
     btnCancelQ.click()
 
     btnSubmit.disabled = true
 
-    comments.sendCommentToServer(name.sterilize(), comment.sterilize(), render, clearInputs, updateLoadingState)
+    comments.sendCommentToServer(name, comment, render, clearInputs, updateLoadingState)
 })
 
 btnRemove.addEventListener("click", () => {
