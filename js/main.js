@@ -2,6 +2,7 @@
 
 
 import { comments } from "./comments.js"
+import { clearIntroducer } from "./introducer.js";
 
 
 /* common functions */
@@ -145,11 +146,14 @@ function updateLikeButtons() {
 }
 
 function updateLoadingState(show) {
+    clearIntroducer()
+
     if (show)
         gifLoader.classList.remove("hidden")
     else
         gifLoader.classList.add("hidden")
 }
+
 
 /* listeners */
 
@@ -234,17 +238,13 @@ btnSubmit.addEventListener("click", () => {
     if (name.length <= 3 || !comment)
         return
 
-    document.querySelector(".add-form-row").scrollIntoView()
     updateLoadingState(true)
-
-    clearInputs()
-
        txtName.focus()
     btnCancelQ.click()
 
     btnSubmit.disabled = true
 
-    comments.sendCommentToServer(name.sterilize(), comment.sterilize(), render, updateLoadingState)
+    comments.sendCommentToServer(name.sterilize(), comment.sterilize(), render, clearInputs, updateLoadingState)
 })
 
 btnRemove.addEventListener("click", () => {

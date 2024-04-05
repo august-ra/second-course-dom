@@ -85,7 +85,7 @@ export const comments = {
     },
 
     getCommentsFromServer(doRender, changeLoading) {
-        fetch(this.remoteURI)
+        return fetch(this.remoteURI)
             .then((response) => response.json())
             .then((data) => {
                 this.data = data.comments.map((record) => {
@@ -108,7 +108,7 @@ export const comments = {
             .catch((error) => handleError(error, changeLoading))
     },
 
-    sendCommentToServer(name, comment, doRender, changeLoading) {
+    sendCommentToServer(name, comment, doRender, clearInputs, changeLoading) {
         const params = {
             method: "POST",
             body: JSON.stringify({
@@ -128,7 +128,11 @@ export const comments = {
                 if (statusCode === 400)
                     throw new Error(data.error)
 
-                this.getCommentsFromServer(doRender, changeLoading)
+                return this.getCommentsFromServer(doRender, changeLoading)
+            })
+            .then(() => {
+                clearInputs()
+                changeLoading(false)
             })
             .catch((error) => handleError(error, changeLoading))
     },
