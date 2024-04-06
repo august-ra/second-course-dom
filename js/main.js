@@ -11,26 +11,21 @@ function zeroPad(num, places) {
     return String(num).padStart(places, "0")
 }
 
-Date.prototype.print = (date = null, withSeconds = false) => {
-    if (date === null)
-        date = new Date()
-    else if (typeof date === "string")
-        date = new Date(date)
-
+Date.prototype.print = function (withSeconds = false) {
     const parts = []
-    parts.push(zeroPad(date.getDate(), 2))
+    parts.push(zeroPad(this.getDate(), 2))
     parts.push(".")
-    parts.push(zeroPad(date.getMonth() + 1, 2))
+    parts.push(zeroPad(this.getMonth() + 1, 2))
     parts.push(".")
-    parts.push(date.getFullYear().toString().substring(2))
+    parts.push(this.getFullYear().toString().substring(2))
     parts.push(" ")
-    parts.push(zeroPad(date.getHours(), 2))
+    parts.push(zeroPad(this.getHours(), 2))
     parts.push(":")
-    parts.push(zeroPad(date.getMinutes(), 2))
+    parts.push(zeroPad(this.getMinutes(), 2))
 
     if (withSeconds) {
         parts.push(":")
-        parts.push(zeroPad(date.getSeconds(), 2))
+        parts.push(zeroPad(this.getSeconds(), 2))
     }
 
     return parts.join("")
