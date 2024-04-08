@@ -22,8 +22,8 @@ let activateLeft = function () {
     root.style.setProperty("--disabled",     "gray")
     root.style.setProperty("--mine",         "var(--green)")
     root.style.setProperty("--others",       "var(--purple)")
-    root.style.setProperty("--heart-empty",  `url("./img/heart-empty.svg")`)
-    root.style.setProperty("--heart-filled", `url("./img/heart-filled.svg")`)
+    root.style.setProperty("--heart-empty",  `url("./img/heart-standard-empty.svg")`)
+    root.style.setProperty("--heart-filled", `url("./img/heart-standard-filled.svg")`)
 
     showEnoughTimes()
 }
