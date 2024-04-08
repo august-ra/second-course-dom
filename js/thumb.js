@@ -70,11 +70,11 @@ lblRight.addEventListener("click", () => {
         activateRight()
 })
 
-buttons.forEach(
-    (button) => button.addEventListener("click", () => {
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
         if (lblRight.classList.contains("mode-active"))
             activateLeft()
         else
             activateRight()
     })
-)
+})
