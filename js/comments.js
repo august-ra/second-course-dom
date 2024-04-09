@@ -127,6 +127,8 @@ export const comments = {
             .then((data) => {
                 if (statusCode === 400)
                     throw new Error(data.error)
+                if (statusCode === 500)
+                    throw new Error("Произошла ошибка на сервере. Код ответа 500")
 
                 return this.getCommentsFromServer(doRender, changeLoading)
             })
@@ -140,7 +142,10 @@ export const comments = {
 
 
 function handleError(error, changeLoading) {
-    alert(error)
+    if (error.message === "Failed to fetch")
+        alert("Произошла ошибка, проверьте доступность сети Интернет")
+    else
+        alert(error.message)
 
     changeLoading(false)
 }
