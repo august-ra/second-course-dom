@@ -1,80 +1,84 @@
 "use strict"
 
 
-const root     = document.querySelector(":root")
-const lblLeft  = document.getElementById("cute-mode")
-const lblRight = document.getElementById("devil-mode")
-const btnSlot  = document.getElementById("slot-button")
-const btnArm   = document.getElementById("arm-button")
-const buttons = [btnSlot, btnArm]
+export const thumb = {
+    root: document.querySelector(":root"),
+    lblLeft: document.getElementById("cute-mode"),
+    lblRight: document.getElementById("devil-mode"),
+    btnSlot: document.getElementById("slot-button"),
+    btnArm: document.getElementById("arm-button"),
 
-let times = 0
+    times: 0,
 
 
-let activateLeft = function () {
-     lblLeft.classList.add("mode-active")
-    lblRight.classList.remove("mode-active")
-      btnArm.classList.remove("arm-changed")
+    activateLeft() {
+        this.lblLeft.classList.add("mode-active")
+        this.lblRight.classList.remove("mode-active")
+        this.btnArm.classList.remove("arm-changed")
 
-    // set usual colors
-    root.style.setProperty("--scroll",       "var(--pear)")
-    root.style.setProperty("--active",       "var(--pear)")
-    root.style.setProperty("--disabled",     "gray")
-    root.style.setProperty("--mine",         "var(--green)")
-    root.style.setProperty("--others",       "var(--purple)")
-    root.style.setProperty("--heart-empty",  `url("./img/heart-standard-empty.svg")`)
-    root.style.setProperty("--heart-filled", `url("./img/heart-standard-filled.svg")`)
+        // set usual colors
+        this.root.style.setProperty("--scroll", "var(--pear)")
+        this.root.style.setProperty("--active", "var(--pear)")
+        this.root.style.setProperty("--disabled", "gray")
+        this.root.style.setProperty("--mine", "var(--green)")
+        this.root.style.setProperty("--others", "var(--purple)")
+        this.root.style.setProperty("--heart-empty", `url("./img/heart-standard-empty.svg")`)
+        this.root.style.setProperty("--heart-filled", `url("./img/heart-standard-filled.svg")`)
 
-    showEnoughTimes()
+        this.showEnoughTimes()
+    },
+
+    activateRight() {
+        this.lblLeft.classList.remove("mode-active")
+        this.lblRight.classList.add("mode-active")
+        this.btnArm.classList.add("arm-changed")
+
+        // set unusual colors
+        this.root.style.setProperty("--scroll", "var(--red)")
+        this.root.style.setProperty("--active", "#ec3030")
+        this.root.style.setProperty("--disabled", "#9a4242")
+        this.root.style.setProperty("--mine", "#ec7630")
+        this.root.style.setProperty("--others", "var(--red)")
+        this.root.style.setProperty("--heart-empty", `url("./img/heart-devil-empty.svg")`)
+        this.root.style.setProperty("--heart-filled", `url("./img/heart-devil-filled.svg")`)
+
+        this.showEnoughTimes()
+    },
+
+    showEnoughTimes() {
+        ++this.times
+
+        if (this.times < 3)
+            return
+
+        this.btnArm.classList.add("arm--broken")
+
+        this.activateLeft = function () {}
+        this.activateRight = function () {}
+
+        console.error("Доигрался. Сломал ручку переключателя. Молодцом!")
+    },
+
+
+    handleListeners() {
+        this.lblLeft.addEventListener("click", () => {
+            if (this.lblRight.classList.contains("mode-active"))
+                this.activateLeft()
+        })
+
+        this.lblRight.addEventListener("click", () => {
+            if (this.lblLeft.classList.contains("mode-active"))
+                this.activateRight()
+        })
+
+        const buttons = [this.btnSlot, this.btnArm]
+        buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+                if (this.lblRight.classList.contains("mode-active"))
+                    this.activateLeft()
+                else
+                    this.activateRight()
+            })
+        })
+    },
 }
-
-let activateRight = function () {
-     lblLeft.classList.remove("mode-active")
-    lblRight.classList.add("mode-active")
-      btnArm.classList.add("arm-changed")
-
-    // set unusual colors
-    root.style.setProperty("--scroll",       "var(--red)")
-    root.style.setProperty("--active",       "#ec3030")
-    root.style.setProperty("--disabled",     "#9a4242")
-    root.style.setProperty("--mine",         "#ec7630")
-    root.style.setProperty("--others",       "var(--red)")
-    root.style.setProperty("--heart-empty",  `url("./img/heart-devil-empty.svg")`)
-    root.style.setProperty("--heart-filled", `url("./img/heart-devil-filled.svg")`)
-
-    showEnoughTimes()
-}
-
-function showEnoughTimes() {
-    ++times
-
-    if (times < 3)
-        return
-
-    btnArm.classList.add("arm--broken")
-
-    activateLeft = function () {}
-    activateRight = function () {}
-
-    console.error("Доигрался. Сломал ручку переключателя. Молодцом!")
-}
-
-
-lblLeft.addEventListener("click", () => {
-    if (lblRight.classList.contains("mode-active"))
-        activateLeft()
-})
-
-lblRight.addEventListener("click", () => {
-    if (lblLeft.classList.contains("mode-active"))
-        activateRight()
-})
-
-buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-        if (lblRight.classList.contains("mode-active"))
-            activateLeft()
-        else
-            activateRight()
-    })
-})
