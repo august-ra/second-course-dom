@@ -1,6 +1,3 @@
-"use strict"
-
-
 export const thumb = {
     root: document.querySelector(":root"),
     lblLeft: document.getElementById("cute-mode"),

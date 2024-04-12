@@ -1,6 +1,3 @@
-"use strict"
-
-
 import { API } from "./api.js"
 import { DOM } from "./DOM.js"
 

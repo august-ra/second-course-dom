@@ -1,6 +1,3 @@
-"use strict"
-
-
 import { comments } from "./comments.js"
 
 

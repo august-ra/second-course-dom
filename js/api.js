@@ -1,6 +1,3 @@
-"use strict"
-
-
 import { DOM } from "./DOM.js"
 
 
