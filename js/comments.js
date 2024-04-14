@@ -22,7 +22,7 @@ export const comments = {
     },
 
     deleteLast() {
-        this.data.pop()
+        return Boolean(this.data.pop())
     },
 
     updateLikeStatus(id) {
@@ -103,7 +103,7 @@ export const comments = {
                 })
 
                 DOM.updateLoadingState(false)
-                DOM.render()
+                DOM.renderApp()
             })
             .catch(API.handleError)
     },

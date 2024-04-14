@@ -7,7 +7,7 @@ export const API = {
     getDataFromEndpoint(endpoint, params) {
         let statusCode = 0
 
-        return fetch(this.remoteURI, params)
+        return fetch(endpoint, params)
             .then((response) => {
                 statusCode = response.status
 

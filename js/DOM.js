@@ -154,12 +154,10 @@ export const DOM = {
         })
 
         this.btnRemove.addEventListener("click", () => {
-            if (this.lstComments.children.length === 0)
+            if (!comments.deleteLast())
                 return
 
-            comments.deleteLast()
-
-            this.render()
+            this.renderApp()
         })
 
     },
@@ -211,7 +209,7 @@ export const DOM = {
 
                 e.stopPropagation()
 
-                this.render()
+                this.renderApp()
             })
         })
     },
@@ -219,7 +217,7 @@ export const DOM = {
 
     /* render function */
 
-    render() {
+    renderApp() {
         this.lstComments.innerHTML = comments.printListItems()
 
         this.updateCommentBoxes()
