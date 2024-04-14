@@ -1,11 +1,11 @@
-"use strict"
+import { API } from "./api.js"
+import { DOM } from "./DOM.js"
 
 
 export const comments = {
     data: [],
-    remoteURI: "https://wedev-api.sky.pro/api/v1/@august-ra/comments",
 
-    addRecord(name, comment, quoteID="") {
+    addRecordWhileOffline(name, comment, quoteID="") {
         const isMine = (name === "@august-ra")
         const count  = new Date().getTime()
 
@@ -84,9 +84,10 @@ export const comments = {
         }).join('')
     },
 
-    getCommentsFromServer(doRender, changeLoading) {
-        return fetch(this.remoteURI)
-            .then((response) => response.json())
+    getCommentsFromServer() {
+        API.changeLoading = this.changeLoading
+
+        return API.getCommentsFromServer()
             .then((data) => {
                 this.data = data.comments.map((record) => {
                     return {
@@ -101,51 +102,20 @@ export const comments = {
                     }
                 })
 
-                changeLoading(false)
-
-                doRender()
+                DOM.updateLoadingState(false)
+                DOM.render()
             })
-            .catch((error) => handleError(error, changeLoading))
+            .catch(API.handleError)
     },
 
-    sendCommentToServer(name, comment, doRender, clearInputs, changeLoading) {
-        const params = {
-            method: "POST",
-            body: JSON.stringify({
-                name: name,
-                text: comment,
-            })
-        }
-        let statusCode = 0
+    sendCommentToServer(name, comment) {
+        API.changeLoading = this.changeLoading
 
-        fetch(this.remoteURI, params)
-            .then((response) => {
-                statusCode = response.status
-
-                return response.json()
-            })
-            .then((data) => {
-                if (statusCode === 400)
-                    throw new Error(data.error)
-                if (statusCode === 500)
-                    throw new Error("Произошла ошибка на сервере. Код ответа 500")
-
-                return this.getCommentsFromServer(doRender, changeLoading)
-            })
+        API.sendCommentToServer(name, comment)
+            .then(() => this.getCommentsFromServer())
             .then(() => {
-                clearInputs()
-                changeLoading(false)
+                DOM.clearInputs()
             })
-            .catch((error) => handleError(error, changeLoading))
+            .catch(API.handleError)
     },
-}
-
-
-function handleError(error, changeLoading) {
-    if (error.message === "Failed to fetch")
-        alert("Произошла ошибка, проверьте доступность сети Интернет")
-    else
-        alert(error.message)
-
-    changeLoading(false)
 }
