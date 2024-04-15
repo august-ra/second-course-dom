@@ -38,7 +38,7 @@ export const comments = {
     },
 
     printQuote(id, toElement) {
-        const record = this.data[id]
+        const record = this.data.filter((item) => item.id === id)[0]
 
         toElement.innerHTML =  record.comment
         return `${record.name}, `
@@ -46,10 +46,10 @@ export const comments = {
     },
 
     printListItems() {
-        return this.data.map((record, index) => {
+        return this.data.map((record) => {
             const commentCl = `comment${record.isMine ? " comment--mine" : ""}`
             const buttonCl  = `like-button${record.isLiked ? " like-button--active" : ""}`
-            const dataId    = `data-id="${index}"`
+            const dataId    = `data-id="${record.id}"`
 
             const printQuote = () => {
                 if (!record.quoteID)
