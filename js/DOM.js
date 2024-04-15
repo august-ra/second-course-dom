@@ -261,8 +261,8 @@ export const DOM = {
 
         if (this.state.singingAuthor) {
             parts.push(`<div class="signing-form">
-                <input type="text" id="login-input" class="input input--short" placeholder="Введите ваш логин" value="">
-                <input type="password" id="password-input" class="input input--short" placeholder="Введите ваш пароль" value="">
+                <input type="text" id="login-input" class="input" placeholder="Введите ваш логин" value="">
+                <input type="password" id="password-input" class="input" placeholder="Введите ваш пароль" value="">
                 <div class="row flex">
                     <button id="sign-in-button" class="button">Авторизоваться</button>
                     <p>Нет аккаунта — <a href="#" class="link" id="signing-page">зарегистрируйтесь</a>.</p>
@@ -271,9 +271,9 @@ export const DOM = {
             parts.push(`<p class="signing-text">Вернуться к <a href="#" class="link" id="signing-link">комментариям</a> в режиме «только просмотр».</p>`)
         } else if (this.state.registrationAuthor) {
             parts.push(`<div class="signing-form">
-                <input type="text" id="login-input" class="input input--short" placeholder="Введите ваш логин" value="">
-                <input type="text" id="name-input" class="input input--short" placeholder="Введите ваше имя" value="">
-                <input type="password" id="password-input" class="input input--short" placeholder="Введите ваш пароль" value="">
+                <input type="text" id="login-input" class="input" placeholder="Введите ваш логин" value="">
+                <input type="text" id="name-input" class="input" placeholder="Введите ваше имя" value="">
+                <input type="password" id="password-input" class="input" placeholder="Введите ваш пароль" value="">
                 <div class="row flex">
                     <button id="sign-up-button" class="button">Зарегистрироваться</button>
                     <p>Есть аккаунт — <a href="#" class="link" id="signing-page">авторизуйтесь</a>.</p>

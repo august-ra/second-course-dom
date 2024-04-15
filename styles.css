@@ -333,16 +333,16 @@ body::-webkit-scrollbar-thumb {
   border: 3px solid white;
   box-sizing: border-box;
   outline: none;
+  padding: 11px 22px;
 }
 
 .input--short {
   width: 300px;
-  padding: 11px 22px;
 }
 
 .input--big {
   width: 100%;
-  padding: 22px;
+  padding-block: 22px;
   resize: none;
 }
 
