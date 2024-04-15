@@ -162,7 +162,7 @@ export const DOM = {
 
     },
 
-    updateCommentBoxes() {
+    handleCommentBoxes() {
         document.querySelectorAll(".comment").forEach((box) => {
             box.addEventListener("click", () => {
                 document.querySelector(".comment-editor").scrollIntoView()
@@ -188,7 +188,7 @@ export const DOM = {
         })
     },
 
-    updateCommentQuote() {
+    handleCommentQuote() {
         document.querySelectorAll(".comment-quote").forEach((quote) => {
             quote.addEventListener("click", (e) => {
                 const recordId = Number(quote.dataset.quoteid)
@@ -201,7 +201,7 @@ export const DOM = {
         })
     },
 
-    updateLikeButtons() {
+    handleLikeButtons() {
         document.querySelectorAll(".like-button").forEach((button) => {
             button.addEventListener("click", (e) => {
                 const recordId = Number(button.dataset.id)
@@ -220,9 +220,9 @@ export const DOM = {
     renderApp() {
         this.lstComments.innerHTML = comments.printListItems()
 
-        this.updateCommentBoxes()
-        this.updateCommentQuote()
-        this.updateLikeButtons()
+        this.handleCommentBoxes()
+        this.handleCommentQuote()
+        this.handleLikeButtons()
     },
 
 
