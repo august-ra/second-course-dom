@@ -122,8 +122,8 @@ export const DOM = {
             this.lblQuote.innerHTML = ""
             this.txtQuote.value     = ""
 
-            this.txtComment.classList.add("add-form-text--alone")
-            this.txtComment.classList.remove("add-form-text--inclusive")
+            this.txtComment.classList.add("input--alone")
+            this.txtComment.classList.remove("input--inclusive")
 
             const element = this.lblQuote.parentElement
             element.classList.add("quote--invisible")
@@ -179,8 +179,8 @@ export const DOM = {
                     `${element.clientHeight + 26}px`
                 )
 
-                this.txtComment.classList.add("add-form-text--inclusive")
-                this.txtComment.classList.remove("add-form-text--alone")
+                this.txtComment.classList.add("input--inclusive")
+                this.txtComment.classList.remove("input--alone")
 
                 element.classList.add("quote--visible")
                 element.classList.remove("quote--invisible")

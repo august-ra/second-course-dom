@@ -24,10 +24,10 @@
 
       <div class="add-form">
         <label class="hidden" for="name-input">Имя:</label>
-        <input class="add-form-name" type="text" placeholder="Введите ваше имя" id="name-input">
+        <input class="input input--short" type="text" placeholder="Введите ваше имя" id="name-input">
 
         <label class="hidden" for="quote-input">Цитата:</label>
-        <input class="add-form-name hidden" type="text" id="quote-input">
+        <input class="input input--short hidden" type="text" id="quote-input">
 
         <div class="comment-editor">
           <div class="quote flex" id="quote-box">
@@ -38,13 +38,13 @@
           </div>
 
           <label class="hidden" for="comment-input">Комментарий:</label>
-          <textarea class="add-form-text" placeholder="Введите ваш коментарий" rows="4" id="comment-input"></textarea>
+          <textarea class="input input--big" placeholder="Введите ваш коментарий" rows="4" id="comment-input"></textarea>
         </div>
 
-        <div class="add-form-row flex">
-          <button class="add-form-button" id="comment-add">Написать</button>
+        <div class="row flex">
+          <button class="button" id="comment-add">Написать</button>
           <span class="loader hidden" id="loader"></span>
-          <button class="add-form-button" id="comment-remove">Удалить последний комментарий</button>
+          <button class="button" id="comment-remove">Удалить последний комментарий</button>
         </div>
       </div>
     </div>
@@ -86,7 +86,7 @@
         }
 
     </script>
-    <script type="module" src="js/main.js"></script>
-    <script type="module" src="js/thumb.js"></script>
+    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="./js/thumb.js"></script>
   </body>
 </html>
