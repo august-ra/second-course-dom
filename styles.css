@@ -5,6 +5,7 @@
   --purple: #7334ea;
   --green: #34ea73;
   --red: #bb0f0f;
+  --shadow: var(--back);
   --mine: var(--green);
   --others: var(--purple);
   --active: var(--pear);
@@ -45,6 +46,7 @@ body::-webkit-scrollbar-thumb {
 
 .mode {
   margin-bottom: 45px;
+  box-shadow: 0 63px 0 0 var(--shadow); /* bar */
 
   &.flex {
     display: flex;

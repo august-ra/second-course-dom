@@ -1,3 +1,4 @@
+
 export const thumb = {
     root: document.querySelector(":root"),
     lblLeft: document.getElementById("cute-mode"),
@@ -14,6 +15,7 @@ export const thumb = {
         this.btnArm.classList.remove("arm-changed")
 
         // set usual colors
+        this.root.style.setProperty("--shadow", "var(--back)")
         this.root.style.setProperty("--scroll", "var(--pear)")
         this.root.style.setProperty("--active", "var(--pear)")
         this.root.style.setProperty("--disabled", "gray")
@@ -31,6 +33,7 @@ export const thumb = {
         this.btnArm.classList.add("arm-changed")
 
         // set unusual colors
+        this.root.style.setProperty("--shadow", "#f00")
         this.root.style.setProperty("--scroll", "var(--red)")
         this.root.style.setProperty("--active", "#ec3030")
         this.root.style.setProperty("--disabled", "#9a4242")
