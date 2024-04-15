@@ -16,6 +16,13 @@ export const DOM = {
 
     takingText: false,
 
+    state: {
+        waitingAuthor:      true,
+        singingAuthor:      false,
+        registrationAuthor: false,
+        sendingNew:         false,
+    },
+
 
     /* element's working functions */
 

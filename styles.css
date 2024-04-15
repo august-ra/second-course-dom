@@ -29,6 +29,13 @@ body::-webkit-scrollbar-thumb {
   background: linear-gradient(-45deg, var(--back) 0%, var(--scroll) 20px, var(--scroll) calc(100% - 20px), var(--back) 100%);
 }
 
+.link {
+
+  &, &:hover, &:visited {
+    color: var(--active);
+  }
+}
+
 .hidden {
   display: none;
 }
@@ -150,8 +157,13 @@ body::-webkit-scrollbar-thumb {
   list-style: none;
 }
 
+.signing-text {
+  text-align: center;
+}
+
 .comment,
-.add-form {
+.add-form,
+.signing-form {
   width: 616px;
   box-sizing: border-box;
   background: radial-gradient(
@@ -250,11 +262,13 @@ body::-webkit-scrollbar-thumb {
   background-image: url("./img/heart-mine-filled.svg");
 }
 
-.add-form {
+.add-form,
+.signing-form {
   padding: 20px;
   margin-top: 48px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
 .comment-editor {
@@ -328,7 +342,6 @@ body::-webkit-scrollbar-thumb {
 
 .input--big {
   width: 100%;
-  margin-top: 12px;
   padding: 22px;
   resize: none;
 }
