@@ -3,7 +3,7 @@ import { comments } from "./comments.js"
 
 export const DOM = {
     root:        document.querySelector(":root"),
-    lstComments: document.getElementById("comment-list"),
+    divApp:      document.getElementById("app"),
     txtName:     document.getElementById("name-input"),
     txtQuote:    document.getElementById("quote-input"),
     txtComment:  document.getElementById("comment-input"),
@@ -60,6 +60,38 @@ export const DOM = {
 
 
     /* listeners */
+
+    handleListenersForSigningLink() {
+        const link = document.getElementById("signing-link")
+
+        if (!link)
+            return
+
+        link.addEventListener("click", () => {
+            this.state.singingAuthor = !this.state.singingAuthor
+
+            this.renderApp()
+        })
+    },
+
+    handleListenersForToggleSigningPage() {
+        const link = document.getElementById("signing-page")
+
+        if (!link)
+            return
+
+        link.addEventListener("click", () => {
+            if (this.state.singingAuthor) {
+                this.state.singingAuthor      = false
+                this.state.registrationAuthor = true
+            } else if (this.state.registrationAuthor) {
+                this.state.singingAuthor      = true
+                this.state.registrationAuthor = false
+            }
+
+            this.renderApp()
+        })
+    },
 
     handleListenersForAddForm() {
         this.txtName.addEventListener("dblclick", (e) => {
@@ -225,7 +257,74 @@ export const DOM = {
     /* render function */
 
     renderApp() {
-        this.lstComments.innerHTML = comments.printListItems()
+        let parts = []
+
+        if (this.state.singingAuthor) {
+            parts.push(`<div class="signing-form">
+                <input type="text" id="login-input" class="input input--short" placeholder="Введите ваш логин" value="">
+                <input type="password" id="password-input" class="input input--short" placeholder="Введите ваш пароль" value="">
+                <div class="row flex">
+                    <button id="sign-in-button" class="button">Авторизоваться</button>
+                    <p>Нет аккаунта — <a href="#" class="link" id="signing-page">зарегистрируйтесь</a>.</p>
+                </div>
+            </div>`)
+            parts.push(`<p class="signing-text">Вернуться к <a href="#" class="link" id="signing-link">комментариям</a> в режиме «только просмотр».</p>`)
+        } else if (this.state.registrationAuthor) {
+            parts.push(`<div class="signing-form">
+                <input type="text" id="login-input" class="input input--short" placeholder="Введите ваш логин" value="">
+                <input type="text" id="name-input" class="input input--short" placeholder="Введите ваше имя" value="">
+                <input type="password" id="password-input" class="input input--short" placeholder="Введите ваш пароль" value="">
+                <div class="row flex">
+                    <button id="sign-up-button" class="button">Зарегистрироваться</button>
+                    <p>Есть аккаунт — <a href="#" class="link" id="signing-page">авторизуйтесь</a>.</p>
+                </div>
+            </div>`)
+            parts.push(`<p class="signing-text">Вернуться к <a href="#" class="link" id="signing-link">комментариям</a> в режиме «только просмотр».</p>`)
+        } else {
+            parts.push(`<ul class="comments" id="comment-list">`)
+            parts.push(...comments.printListItems())
+            parts.push(`</ul>`)
+
+            if (this.state.waitingAuthor) {
+                parts.push(`<p class="signing-text">Чтобы отправлять сообщения, пройдите <a href="#" class="link" id="signing-link">авторизацию</a>.</p>`)
+            } else if (this.state.sendingNew) {
+                parts.push(`<div class="preloaderNew" id="preloaderNew">
+                    <span class="loaderNew"></span>
+                </div>`)
+            } else {
+                parts.push(`<div class="add-form">
+                    <label class="hidden" for="name-input">Имя:</label>
+                    <input class="input input--short" type="text" placeholder="Введите ваше имя" id="name-input">
+            
+                    <label class="hidden" for="quote-input">Цитата:</label>
+                    <input class="input input--short hidden" type="text" id="quote-input">
+            
+                    <div class="comment-editor">
+                        <div class="quote flex" id="quote-box">
+                            <div class="left" id="quote-text">
+                                <!-- vacant -->
+                            </div>
+                            <button class="cancel-quote-button" id="quote-cancel">&times;</button>
+                        </div>
+            
+                        <label class="hidden" for="comment-input">Комментарий:</label>
+                        <textarea class="input input--big" placeholder="Введите ваш коментарий" rows="4" id="comment-input"></textarea>
+                    </div>
+            
+                    <div class="row flex">
+                        <button class="button" id="comment-add">Написать</button>
+                        <span class="loader hidden" id="loader"></span>
+                        <button class="button" id="comment-remove">Удалить последний комментарий</button>
+                    </div>
+                </div>`)
+            }
+        }
+
+        this.divApp.innerHTML = parts.join("")
+
+        this.handleListenersForSigningLink()
+        this.handleListenersForToggleSigningPage()
+        this.handleListenersForAddForm()
 
         this.handleCommentBoxes()
         this.handleCommentQuote()
