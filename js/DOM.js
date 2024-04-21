@@ -134,6 +134,9 @@ export const DOM = {
                     API.username = data.user.name
                     API.token    = data.user.token
 
+                    localStorage.setItem("username", API.username)
+                    localStorage.setItem("token",    API.token)
+
                     this.state.singingAuthor      = false
                     this.state.registrationAuthor = false
                     this.state.waitingAuthor      = false
@@ -405,11 +408,12 @@ export const DOM = {
 
     /* start working */
 
-    start() {
+    start(username = "") {
+        if (username)
+            this.state.waitingAuthor = false
+
         if (this.btnSubmit)
             this.btnSubmit.disabled = true
-
-        this.handleListenersForAddForm()
 
         comments.getCommentsFromServer()
     },
