@@ -1,4 +1,5 @@
 import { comments } from "./comments.js"
+import { API } from "./api.js";
 
 
 export const DOM = {
@@ -52,6 +53,14 @@ export const DOM = {
     updateLoadingState(show) {
         clearIntroducer()
 
+        if (this.state.waitingAuthor)
+            return
+
+        this.gifLoader = document.getElementById("loader")
+
+        if (!this.gifLoader)
+            return
+
         if (show)
             this.gifLoader.classList.remove("hidden")
         else
@@ -93,7 +102,62 @@ export const DOM = {
         })
     },
 
+    handleListenersForSigningButton() {
+        const button = document.getElementById("sign-button")
+
+        if (!button || !this.state.singingAuthor && !this.state.registrationAuthor)
+            return
+
+        const txtName     = document.getElementById("name-input")
+        const txtLogin    = document.getElementById("login-input")
+        const txtPassword = document.getElementById("password-input")
+
+        const doSign = () => {
+            const login    = txtLogin.value.sterilize()
+            const password = txtPassword.value.sterilize()
+
+            if (this.state.singingAuthor) {
+                return API.signIn(login, password)
+            } else if (this.state.registrationAuthor) {
+                const name = txtName.value.sterilize()
+
+                return API.signUp(name, login, password)
+            }
+        }
+
+        button.addEventListener("click", () => {
+            doSign()
+                .then((data) => {
+                    if (data === "error")
+                        return data
+
+                    API.username = data.user.name
+                    API.token    = data.user.token
+
+                    this.state.singingAuthor      = false
+                    this.state.registrationAuthor = false
+                    this.state.waitingAuthor      = false
+
+                    comments.getCommentsFromServer()
+                })
+                .catch(API.handleError)
+        })
+    },
+
     handleListenersForAddForm() {
+        if (this.state.waitingAuthor)
+            return
+
+        this.txtName    = document.getElementById("name-input")
+        this.txtQuote   = document.getElementById("quote-input")
+        this.txtComment = document.getElementById("comment-input")
+        this.boxQuote   = document.getElementById("quote-box")
+        this.lblQuote   = document.getElementById("quote-text")
+        this.btnCancelQ = document.getElementById("quote-cancel")
+        this.btnSubmit  = document.getElementById("comment-add")
+        this.btnRemove  = document.getElementById("comment-remove")
+        this.gifLoader  = document.getElementById("loader")
+
         this.txtName.addEventListener("dblclick", (e) => {
             if (!this.getValue(this.txtName) && e.button === 0) {
                 this.txtName.value = "@august-ra"
@@ -264,18 +328,18 @@ export const DOM = {
                 <input type="text" id="login-input" class="input" placeholder="Введите ваш логин" value="">
                 <input type="password" id="password-input" class="input" placeholder="Введите ваш пароль" value="">
                 <div class="row flex">
-                    <button id="sign-in-button" class="button">Авторизоваться</button>
+                    <button id="sign-button" class="button">Авторизоваться</button>
                     <p>Нет аккаунта — <a href="#" class="link" id="signing-page">зарегистрируйтесь</a>.</p>
                 </div>
             </div>`)
             parts.push(`<p class="signing-text">Вернуться к <a href="#" class="link" id="signing-link">комментариям</a> в режиме «только просмотр».</p>`)
         } else if (this.state.registrationAuthor) {
             parts.push(`<div class="signing-form">
-                <input type="text" id="login-input" class="input" placeholder="Введите ваш логин" value="">
                 <input type="text" id="name-input" class="input" placeholder="Введите ваше имя" value="">
+                <input type="text" id="login-input" class="input" placeholder="Введите ваш логин" value="">
                 <input type="password" id="password-input" class="input" placeholder="Введите ваш пароль" value="">
                 <div class="row flex">
-                    <button id="sign-up-button" class="button">Зарегистрироваться</button>
+                    <button id="sign-button" class="button">Зарегистрироваться</button>
                     <p>Есть аккаунт — <a href="#" class="link" id="signing-page">авторизуйтесь</a>.</p>
                 </div>
             </div>`)
@@ -292,9 +356,14 @@ export const DOM = {
                     <span class="loaderNew"></span>
                 </div>`)
             } else {
+                let defaultName = ""
+
+                if (API.username)
+                    defaultName = `value="${API.username}" disabled`
+
                 parts.push(`<div class="add-form">
                     <label class="hidden" for="name-input">Имя:</label>
-                    <input class="input input--short" type="text" placeholder="Введите ваше имя" id="name-input">
+                    <input class="input input--short" type="text" placeholder="Введите ваше имя" id="name-input" ${defaultName}>
             
                     <label class="hidden" for="quote-input">Цитата:</label>
                     <input class="input input--short hidden" type="text" id="quote-input">
@@ -324,6 +393,7 @@ export const DOM = {
 
         this.handleListenersForSigningLink()
         this.handleListenersForToggleSigningPage()
+        this.handleListenersForSigningButton()
         this.handleListenersForAddForm()
 
         this.handleCommentBoxes()
@@ -335,7 +405,8 @@ export const DOM = {
     /* start working */
 
     start() {
-        this.btnSubmit.disabled = true
+        if (this.btnSubmit)
+            this.btnSubmit.disabled = true
 
         this.handleListenersForAddForm()
 

@@ -112,7 +112,12 @@ export const comments = {
         API.changeLoading = this.changeLoading
 
         API.sendCommentToServer(name, comment)
-            .then(() => this.getCommentsFromServer())
+            .then((data) => {
+                if (data === "error")
+                    return Promise.reject()
+
+                this.getCommentsFromServer()
+            })
             .then(() => {
                 DOM.clearInputs()
             })

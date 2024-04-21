@@ -53,6 +53,7 @@ body::-webkit-scrollbar-thumb {
 
 .mode {
   margin-bottom: 45px;
+  cursor: default;
   box-shadow: 0 63px 0 0 var(--shadow); /* bar */
 
   &.flex {
@@ -334,6 +335,11 @@ body::-webkit-scrollbar-thumb {
   box-sizing: border-box;
   outline: none;
   padding: 11px 22px;
+
+  &:disabled {
+    color: white;
+    border-color: var(--disabled);
+  }
 }
 
 .input--short {
