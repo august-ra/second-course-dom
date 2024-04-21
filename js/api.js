@@ -2,7 +2,7 @@ import { DOM } from "./DOM.js"
 
 
 export const API = {
-    remoteURI: "https://wedev-api.sky.pro/api/v1/@august-ra/comments",
+    commentsURI: "https://wedev-api.sky.pro/api/v1/@august-ra/comments", // GET (read) + POST (send)
 
     getDataFromEndpoint(endpoint, params) {
         let statusCode = 0
@@ -24,7 +24,7 @@ export const API = {
     },
 
     getCommentsFromServer() {
-        return this.getDataFromEndpoint(this.remoteURI, {})
+        return this.getDataFromEndpoint(this.commentsURI, {})
     },
 
     sendCommentToServer(name, comment) {
@@ -36,7 +36,7 @@ export const API = {
             })
         }
 
-        return this.getDataFromEndpoint(this.remoteURI, params)
+        return this.getDataFromEndpoint(this.commentsURI, params)
     },
 
     handleError(error) {
