@@ -37,7 +37,18 @@ export const API = {
     },
 
     getCommentsFromServer() {
-        return this.getDataFromEndpoint(this.commentsURI, {})
+        let params
+
+        if (this.token)
+            params = {
+                headers: {
+                    Authorization: `Bearer ${this.token}`,
+                },
+            }
+        else
+            params = {}
+
+        return this.getDataFromEndpoint(this.commentsURI, params)
     },
 
     sendCommentToServer(comment) {
@@ -52,6 +63,28 @@ export const API = {
         }
 
         return this.getDataFromEndpoint(this.commentsURI, params)
+    },
+
+    toggleLike(commentID) {
+        const params = {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            },
+        }
+
+        return this.getDataFromEndpoint(`${this.commentsURI}/${commentID}/toggle-like`, params)
+    },
+
+    deleteCommentFromServer(commentID) {
+        const params = {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            },
+        }
+
+        return this.getDataFromEndpoint(`${this.commentsURI}/${commentID}`, params)
     },
 
     signIn(login, password) {

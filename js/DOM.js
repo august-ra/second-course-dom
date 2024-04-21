@@ -254,13 +254,7 @@ export const DOM = {
             comments.sendCommentToServer(comment)
         })
 
-        this.btnRemove.addEventListener("click", () => {
-            if (!comments.deleteLast())
-                return
-
-            this.renderApp()
-        })
-
+        this.btnRemove.addEventListener("click", () => comments.deleteLast())
     },
 
     handleCommentBoxes() {

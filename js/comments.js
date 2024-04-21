@@ -26,7 +26,13 @@ export const comments = {
     },
 
     deleteLast() {
-        return Boolean(this.data.pop())
+        const id = this.data[this.data.length - 1].id
+
+        API.deleteCommentFromServer(id)
+            .then((data) => {
+                if (data.result === "ok")
+                    this.getCommentsFromServer()
+            })
     },
 
     updateLikeStatus(id) {
@@ -35,13 +41,13 @@ export const comments = {
         if (!record)
             return
 
-        if (record.isLiked) {
-            record.isLiked = false
-            record.marks  -= 1
-        } else {
-            record.isLiked = true
-            record.marks  += 1
-        }
+        API.toggleLike(id)
+            .then((data) => {
+                record.isLiked = data.result.isLiked
+                record.marks   = data.result.likes
+
+                DOM.renderApp()
+            })
     },
 
     printQuote(id, toElement) {
