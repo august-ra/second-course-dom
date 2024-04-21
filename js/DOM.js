@@ -264,6 +264,9 @@ export const DOM = {
     },
 
     handleCommentBoxes() {
+        if (this.state.waitingAuthor)
+            return
+
         document.querySelectorAll(".comment").forEach((box) => {
             box.addEventListener("click", () => {
                 document.querySelector(".comment-editor").scrollIntoView()
@@ -290,6 +293,9 @@ export const DOM = {
     },
 
     handleCommentQuote() {
+        if (this.state.waitingAuthor)
+            return
+
         document.querySelectorAll(".comment-quote").forEach((quote) => {
             quote.addEventListener("click", (e) => {
                 const recordId = Number(quote.dataset.quoteid)
@@ -303,9 +309,12 @@ export const DOM = {
     },
 
     handleLikeButtons() {
+        if (this.state.waitingAuthor)
+            return
+
         document.querySelectorAll(".like-button").forEach((button) => {
             button.addEventListener("click", (e) => {
-                const recordId = Number(button.dataset.id)
+                const recordId = button.dataset.id
                 comments.updateLikeStatus(recordId)
 
                 e.stopPropagation()

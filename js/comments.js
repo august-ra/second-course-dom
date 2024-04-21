@@ -21,12 +21,19 @@ export const comments = {
         })
     },
 
+    getCommentById(id) {
+        return this.data.filter((item) => item.id === id)[0]
+    },
+
     deleteLast() {
         return Boolean(this.data.pop())
     },
 
     updateLikeStatus(id) {
-        const record = this.data[id]
+        const record = this.getCommentById(id)
+
+        if (!record)
+            return
 
         if (record.isLiked) {
             record.isLiked = false
@@ -38,7 +45,7 @@ export const comments = {
     },
 
     printQuote(id, toElement) {
-        const record = this.data.filter((item) => item.id === id)[0]
+        const record = this.getCommentById(id)
 
         toElement.innerHTML =  record.comment
         return `${record.name}, `
