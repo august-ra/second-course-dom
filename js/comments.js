@@ -108,10 +108,10 @@ export const comments = {
             .catch(API.handleError)
     },
 
-    sendCommentToServer(name, comment) {
+    sendCommentToServer(comment) {
         API.changeLoading = this.changeLoading
 
-        API.sendCommentToServer(name, comment)
+        API.sendCommentToServer(comment)
             .then((data) => {
                 if (data === "error")
                     return Promise.reject()

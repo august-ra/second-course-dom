@@ -236,24 +236,22 @@ export const DOM = {
         })
 
         this.btnSubmit.addEventListener("click", () => {
-            let name    = this.getValue(this.txtName)
             let quoteID = this.getValue(this.txtQuote)
             let comment = this.getValue(this.txtComment)
 
-            if (name.length <= 3 || !comment)
+            if (!comment)
                 return
 
-            name    =    name.sterilize()
             comment = comment.sterilize()
 
             this.updateLoadingState(true)
 
-            this.txtName.focus()
+            this.txtComment.focus()
             this.btnCancelQ.click()
 
             this.btnSubmit.disabled = true
 
-            comments.sendCommentToServer(name, comment)
+            comments.sendCommentToServer(comment)
         })
 
         this.btnRemove.addEventListener("click", () => {

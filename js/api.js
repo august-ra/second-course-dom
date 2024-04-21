@@ -40,14 +40,13 @@ export const API = {
         return this.getDataFromEndpoint(this.commentsURI, {})
     },
 
-    sendCommentToServer(name, comment) {
+    sendCommentToServer(comment) {
         const params = {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${this.token}`,
             },
             body: JSON.stringify({
-                name: name,
                 text: comment,
             })
         }
