@@ -426,6 +426,14 @@ export const DOM = {
             else
                 this.state.waitingAuthor = true
 
+            API.username = ""
+            API.login    = ""
+            API.token    = ""
+
+            localStorage.setItem("username", "")
+            localStorage.setItem("login",    "")
+            localStorage.setItem("token",    "")
+
             this.renderUserState()
             this.renderApp()
         })
