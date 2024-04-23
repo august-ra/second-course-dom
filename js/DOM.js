@@ -134,10 +134,7 @@ export const DOM = {
                     API.username = data.user.name
                     API.login    = data.user.login
                     API.token    = data.user.token
-
-                    localStorage.setItem("username", API.username)
-                    localStorage.setItem("login",    API.login)
-                    localStorage.setItem("token",    API.token)
+                    API.saveSigningData()
 
                     this.state.singingAuthor      = false
                     this.state.registrationAuthor = false
@@ -429,10 +426,7 @@ export const DOM = {
             API.username = ""
             API.login    = ""
             API.token    = ""
-
-            localStorage.setItem("username", "")
-            localStorage.setItem("login",    "")
-            localStorage.setItem("token",    "")
+            API.saveSigningData()
 
             this.renderUserState()
             this.renderApp()

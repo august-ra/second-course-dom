@@ -6,6 +6,24 @@ export const API = {
     login:    "",
     token:    "",
 
+    readSigningData() {
+        const username = localStorage.getItem("username")
+        const login    = localStorage.getItem("login")
+        const token    = localStorage.getItem("token")
+
+        if (username && login && token) {
+            this.username = username
+            this.login    = login
+            this.token    = token
+        }
+    },
+
+    saveSigningData() {
+        localStorage.setItem("username", this.username)
+        localStorage.setItem("login",    this.login)
+        localStorage.setItem("token",    this.token)
+    },
+
     commentsURI: "https://wedev-api.sky.pro/api/v2/@august-ra/comments", // GET (read) + POST (send)
     signInURI:   "https://wedev-api.sky.pro/api/user/login", // POST
     signUpURI:   "https://wedev-api.sky.pro/api/user", // POST
