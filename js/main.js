@@ -5,13 +5,15 @@ import { thumb } from "./thumb.js"
 
 
 const username = localStorage.getItem("username")
+const login    = localStorage.getItem("login")
 const token    = localStorage.getItem("token")
 
-if (username && token) {
+if (username && login && token) {
     API.username = username
+    API.login    = login
     API.token    = token
 }
 
 
-DOM.start(API.username)
+DOM.start(API.login)
 thumb.handleListeners()

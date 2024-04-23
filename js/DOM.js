@@ -132,14 +132,18 @@ export const DOM = {
                         return data
 
                     API.username = data.user.name
+                    API.login    = data.user.login
                     API.token    = data.user.token
 
                     localStorage.setItem("username", API.username)
+                    localStorage.setItem("login",    API.login)
                     localStorage.setItem("token",    API.token)
 
                     this.state.singingAuthor      = false
                     this.state.registrationAuthor = false
                     this.state.waitingAuthor      = false
+
+                    this.renderUserState()
 
                     comments.getCommentsFromServer()
                 })
@@ -268,7 +272,7 @@ export const DOM = {
             box.addEventListener("click", () => {
                 document.querySelector(".comment-editor").scrollIntoView()
 
-                const recordId = Number(box.dataset.id)
+                const recordId = box.dataset.id
 
                 this.txtQuote.value   = recordId
                 this.txtComment.value = comments.printQuote(recordId, this.lblQuote)
@@ -405,12 +409,36 @@ export const DOM = {
         this.handleLikeButtons()
     },
 
+    renderUserState() {
+        const rightSide = document.querySelector(".user-info")
+
+        if (this.state.waitingAuthor)
+            rightSide.innerHTML = `<p class="user-info_name">Аноним</p>
+                <button class="little-button" id="toggle-user">Войти</button>`
+        else
+            rightSide.innerHTML = `<img src="https://gitextensions.github.io/assets/images/blacktocat.png" alt="cat">
+                <p class="user-info_name">${API.login}</p>
+                <button class="little-button" id="toggle-user">Выйти</button>`
+
+        document.getElementById("toggle-user").addEventListener("click", () => {
+            if (this.state.waitingAuthor)
+                this.state.singingAuthor = !this.state.singingAuthor
+            else
+                this.state.waitingAuthor = true
+
+            this.renderUserState()
+            this.renderApp()
+        })
+    },
+
 
     /* start working */
 
-    start(username = "") {
-        if (username)
+    start(login = "") {
+        if (login)
             this.state.waitingAuthor = false
+
+        this.renderUserState()
 
         if (this.btnSubmit)
             this.btnSubmit.disabled = true

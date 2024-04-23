@@ -3,6 +3,7 @@ import { DOM } from "./DOM.js"
 
 export const API = {
     username: "",
+    login:    "",
     token:    "",
 
     commentsURI: "https://wedev-api.sky.pro/api/v2/@august-ra/comments", // GET (read) + POST (send)
