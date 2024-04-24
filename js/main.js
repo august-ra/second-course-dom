@@ -1,7 +1,10 @@
 import {} from "./prototypes.js"
 import { DOM } from "./DOM.js"
+import { API } from "./api.js";
 import { thumb } from "./thumb.js"
 
 
-DOM.start()
+API.readSigningData()
+
+DOM.start(API.login)
 thumb.handleListeners()

@@ -21,24 +21,37 @@ export const comments = {
         })
     },
 
+    getCommentById(id) {
+        return this.data.filter((item) => item.id === id)[0]
+    },
+
     deleteLast() {
-        return Boolean(this.data.pop())
+        const id = this.data[this.data.length - 1].id
+
+        API.deleteCommentFromServer(id)
+            .then((data) => {
+                if (data.result === "ok")
+                    this.getCommentsFromServer()
+            })
     },
 
     updateLikeStatus(id) {
-        const record = this.data[id]
+        const record = this.getCommentById(id)
 
-        if (record.isLiked) {
-            record.isLiked = false
-            record.marks  -= 1
-        } else {
-            record.isLiked = true
-            record.marks  += 1
-        }
+        if (!record)
+            return
+
+        API.toggleLike(id)
+            .then((data) => {
+                record.isLiked = data.result.isLiked
+                record.marks   = data.result.likes
+
+                DOM.renderApp()
+            })
     },
 
     printQuote(id, toElement) {
-        const record = this.data.filter((item) => item.id === id)[0]
+        const record = this.getCommentById(id)
 
         toElement.innerHTML =  record.comment
         return `${record.name}, `
@@ -108,11 +121,16 @@ export const comments = {
             .catch(API.handleError)
     },
 
-    sendCommentToServer(name, comment) {
+    sendCommentToServer(comment) {
         API.changeLoading = this.changeLoading
 
-        API.sendCommentToServer(name, comment)
-            .then(() => this.getCommentsFromServer())
+        API.sendCommentToServer(comment)
+            .then((data) => {
+                if (data === "error")
+                    return Promise.reject()
+
+                this.getCommentsFromServer()
+            })
             .then(() => {
                 DOM.clearInputs()
             })

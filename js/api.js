@@ -2,7 +2,31 @@ import { DOM } from "./DOM.js"
 
 
 export const API = {
-    remoteURI: "https://wedev-api.sky.pro/api/v1/@august-ra/comments",
+    username: "",
+    login:    "",
+    token:    "",
+
+    readSigningData() {
+        const username = localStorage.getItem("username")
+        const login    = localStorage.getItem("login")
+        const token    = localStorage.getItem("token")
+
+        if (username && login && token) {
+            this.username = username
+            this.login    = login
+            this.token    = token
+        }
+    },
+
+    saveSigningData() {
+        localStorage.setItem("username", this.username)
+        localStorage.setItem("login",    this.login)
+        localStorage.setItem("token",    this.token)
+    },
+
+    commentsURI: "https://wedev-api.sky.pro/api/v2/@august-ra/comments", // GET (read) + POST (send)
+    signInURI:   "https://wedev-api.sky.pro/api/user/login", // POST
+    signUpURI:   "https://wedev-api.sky.pro/api/user", // POST
 
     getDataFromEndpoint(endpoint, params) {
         let statusCode = 0
@@ -21,29 +45,95 @@ export const API = {
 
                 return data
             })
+            .catch((error) => {
+                if (error.message === "Failed to fetch")
+                    alert("Произошла ошибка, проверьте доступность сети Интернет")
+                else
+                    alert(error.message)
+
+                return "error"
+            })
     },
 
     getCommentsFromServer() {
-        return this.getDataFromEndpoint(this.remoteURI, {})
+        let params
+
+        if (this.token)
+            params = {
+                headers: {
+                    Authorization: `Bearer ${this.token}`,
+                },
+            }
+        else
+            params = {}
+
+        return this.getDataFromEndpoint(this.commentsURI, params)
     },
 
-    sendCommentToServer(name, comment) {
+    sendCommentToServer(comment) {
         const params = {
             method: "POST",
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            },
             body: JSON.stringify({
-                name: name,
                 text: comment,
             })
         }
 
-        return this.getDataFromEndpoint(this.remoteURI, params)
+        return this.getDataFromEndpoint(this.commentsURI, params)
+    },
+
+    toggleLike(commentID) {
+        const params = {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            },
+        }
+
+        return this.getDataFromEndpoint(`${this.commentsURI}/${commentID}/toggle-like`, params)
+    },
+
+    deleteCommentFromServer(commentID) {
+        const params = {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            },
+        }
+
+        return this.getDataFromEndpoint(`${this.commentsURI}/${commentID}`, params)
+    },
+
+    signIn(login, password) {
+        const params = {
+            method: "POST",
+            body: JSON.stringify({
+                login:    login,
+                password: password,
+            })
+        }
+
+        return this.getDataFromEndpoint(this.signInURI, params)
+    },
+
+    signUp(name, login, password) {
+        const params = {
+            method: "POST",
+            body: JSON.stringify({
+                name:     name,
+                login:    login,
+                password: password,
+            })
+        }
+
+        return this.getDataFromEndpoint(this.signUpURI, params)
     },
 
     handleError(error) {
-        if (error.message === "Failed to fetch")
-            alert("Произошла ошибка, проверьте доступность сети Интернет")
-        else
-            alert(error.message)
+        if (error)
+            throw error
 
         DOM.updateLoadingState(false)
     },

@@ -1,9 +1,10 @@
 import { comments } from "./comments.js"
+import { API } from "./api.js";
 
 
 export const DOM = {
     root:        document.querySelector(":root"),
-    lstComments: document.getElementById("comment-list"),
+    divApp:      document.getElementById("app"),
     txtName:     document.getElementById("name-input"),
     txtQuote:    document.getElementById("quote-input"),
     txtComment:  document.getElementById("comment-input"),
@@ -52,6 +53,14 @@ export const DOM = {
     updateLoadingState(show) {
         clearIntroducer()
 
+        if (this.state.waitingAuthor)
+            return
+
+        this.gifLoader = document.getElementById("loader")
+
+        if (!this.gifLoader)
+            return
+
         if (show)
             this.gifLoader.classList.remove("hidden")
         else
@@ -61,7 +70,98 @@ export const DOM = {
 
     /* listeners */
 
+    handleListenersForSigningLink() {
+        const link = document.getElementById("signing-link")
+
+        if (!link)
+            return
+
+        link.addEventListener("click", () => {
+            this.state.singingAuthor = !this.state.singingAuthor
+
+            this.renderApp()
+        })
+    },
+
+    handleListenersForToggleSigningPage() {
+        const link = document.getElementById("signing-page")
+
+        if (!link)
+            return
+
+        link.addEventListener("click", () => {
+            if (this.state.singingAuthor) {
+                this.state.singingAuthor      = false
+                this.state.registrationAuthor = true
+            } else if (this.state.registrationAuthor) {
+                this.state.singingAuthor      = true
+                this.state.registrationAuthor = false
+            }
+
+            this.renderApp()
+        })
+    },
+
+    handleListenersForSigningButton() {
+        const button = document.getElementById("sign-button")
+
+        if (!button || !this.state.singingAuthor && !this.state.registrationAuthor)
+            return
+
+        const txtName     = document.getElementById("name-input")
+        const txtLogin    = document.getElementById("login-input")
+        const txtPassword = document.getElementById("password-input")
+
+        const doSign = () => {
+            const login    = txtLogin.value.sterilize()
+            const password = txtPassword.value.sterilize()
+
+            if (this.state.singingAuthor) {
+                return API.signIn(login, password)
+            } else if (this.state.registrationAuthor) {
+                const name = txtName.value.sterilize()
+
+                return API.signUp(name, login, password)
+            }
+        }
+
+        button.addEventListener("click", () => {
+            doSign()
+                .then((data) => {
+                    if (data === "error")
+                        return data
+
+                    API.username = data.user.name
+                    API.login    = data.user.login
+                    API.token    = data.user.token
+                    API.saveSigningData()
+
+                    this.state.singingAuthor      = false
+                    this.state.registrationAuthor = false
+                    this.state.waitingAuthor      = false
+
+                    this.renderUserState()
+
+                    comments.getCommentsFromServer()
+                })
+                .catch(API.handleError)
+        })
+    },
+
     handleListenersForAddForm() {
+        if (this.state.waitingAuthor)
+            return
+
+        this.txtName    = document.getElementById("name-input")
+        this.txtQuote   = document.getElementById("quote-input")
+        this.txtComment = document.getElementById("comment-input")
+        this.boxQuote   = document.getElementById("quote-box")
+        this.lblQuote   = document.getElementById("quote-text")
+        this.btnCancelQ = document.getElementById("quote-cancel")
+        this.btnSubmit  = document.getElementById("comment-add")
+        this.btnRemove  = document.getElementById("comment-remove")
+        this.gifLoader  = document.getElementById("loader")
+
         this.txtName.addEventListener("dblclick", (e) => {
             if (!this.getValue(this.txtName) && e.button === 0) {
                 this.txtName.value = "@august-ra"
@@ -140,41 +240,36 @@ export const DOM = {
         })
 
         this.btnSubmit.addEventListener("click", () => {
-            let name    = this.getValue(this.txtName)
             let quoteID = this.getValue(this.txtQuote)
             let comment = this.getValue(this.txtComment)
 
-            if (name.length <= 3 || !comment)
+            if (!comment)
                 return
 
-            name    =    name.sterilize()
             comment = comment.sterilize()
 
             this.updateLoadingState(true)
 
-            this.txtName.focus()
+            this.txtComment.focus()
             this.btnCancelQ.click()
 
             this.btnSubmit.disabled = true
 
-            comments.sendCommentToServer(name, comment)
+            comments.sendCommentToServer(comment)
         })
 
-        this.btnRemove.addEventListener("click", () => {
-            if (!comments.deleteLast())
-                return
-
-            this.renderApp()
-        })
-
+        this.btnRemove.addEventListener("click", () => comments.deleteLast())
     },
 
     handleCommentBoxes() {
+        if (this.state.waitingAuthor)
+            return
+
         document.querySelectorAll(".comment").forEach((box) => {
             box.addEventListener("click", () => {
                 document.querySelector(".comment-editor").scrollIntoView()
 
-                const recordId = Number(box.dataset.id)
+                const recordId = box.dataset.id
 
                 this.txtQuote.value   = recordId
                 this.txtComment.value = comments.printQuote(recordId, this.lblQuote)
@@ -196,6 +291,9 @@ export const DOM = {
     },
 
     handleCommentQuote() {
+        if (this.state.waitingAuthor)
+            return
+
         document.querySelectorAll(".comment-quote").forEach((quote) => {
             quote.addEventListener("click", (e) => {
                 const recordId = Number(quote.dataset.quoteid)
@@ -209,9 +307,12 @@ export const DOM = {
     },
 
     handleLikeButtons() {
+        if (this.state.waitingAuthor)
+            return
+
         document.querySelectorAll(".like-button").forEach((button) => {
             button.addEventListener("click", (e) => {
-                const recordId = Number(button.dataset.id)
+                const recordId = button.dataset.id
                 comments.updateLikeStatus(recordId)
 
                 e.stopPropagation()
@@ -225,20 +326,124 @@ export const DOM = {
     /* render function */
 
     renderApp() {
-        this.lstComments.innerHTML = comments.printListItems()
+        let parts = []
+
+        if (this.state.singingAuthor) {
+            parts.push(`<div class="signing-form">
+                <input type="text" id="login-input" class="input" placeholder="Введите ваш логин" value="">
+                <input type="password" id="password-input" class="input" placeholder="Введите ваш пароль" value="">
+                <div class="row flex">
+                    <button id="sign-button" class="button">Авторизоваться</button>
+                    <p>Нет аккаунта — <a href="#" class="link" id="signing-page">зарегистрируйтесь</a>.</p>
+                </div>
+            </div>`)
+            parts.push(`<p class="signing-text">Вернуться к <a href="#" class="link" id="signing-link">комментариям</a> в режиме «только просмотр».</p>`)
+        } else if (this.state.registrationAuthor) {
+            parts.push(`<div class="signing-form">
+                <input type="text" id="name-input" class="input" placeholder="Введите ваше имя" value="">
+                <input type="text" id="login-input" class="input" placeholder="Введите ваш логин" value="">
+                <input type="password" id="password-input" class="input" placeholder="Введите ваш пароль" value="">
+                <div class="row flex">
+                    <button id="sign-button" class="button">Зарегистрироваться</button>
+                    <p>Есть аккаунт — <a href="#" class="link" id="signing-page">авторизуйтесь</a>.</p>
+                </div>
+            </div>`)
+            parts.push(`<p class="signing-text">Вернуться к <a href="#" class="link" id="signing-link">комментариям</a> в режиме «только просмотр».</p>`)
+        } else {
+            parts.push(`<ul class="comments" id="comment-list">`)
+            parts.push(...comments.printListItems())
+            parts.push(`</ul>`)
+
+            if (this.state.waitingAuthor) {
+                parts.push(`<p class="signing-text">Чтобы отправлять сообщения, пройдите <a href="#" class="link" id="signing-link">авторизацию</a>.</p>`)
+            } else if (this.state.sendingNew) {
+                parts.push(`<div class="preloaderNew" id="preloaderNew">
+                    <span class="loaderNew"></span>
+                </div>`)
+            } else {
+                let defaultName = ""
+
+                if (API.username)
+                    defaultName = `value="${API.username}" disabled`
+
+                parts.push(`<div class="add-form">
+                    <label class="hidden" for="name-input">Имя:</label>
+                    <input class="input input--short" type="text" placeholder="Введите ваше имя" id="name-input" ${defaultName}>
+            
+                    <label class="hidden" for="quote-input">Цитата:</label>
+                    <input class="input input--short hidden" type="text" id="quote-input">
+            
+                    <div class="comment-editor">
+                        <div class="quote flex" id="quote-box">
+                            <div class="left" id="quote-text">
+                                <!-- vacant -->
+                            </div>
+                            <button class="cancel-quote-button" id="quote-cancel">&times;</button>
+                        </div>
+            
+                        <label class="hidden" for="comment-input">Комментарий:</label>
+                        <textarea class="input input--big" placeholder="Введите ваш коментарий" rows="4" id="comment-input"></textarea>
+                    </div>
+            
+                    <div class="row flex">
+                        <button class="button" id="comment-add">Написать</button>
+                        <span class="loader hidden" id="loader"></span>
+                        <button class="button" id="comment-remove">Удалить последний комментарий</button>
+                    </div>
+                </div>`)
+            }
+        }
+
+        this.divApp.innerHTML = parts.join("")
+
+        this.handleListenersForSigningLink()
+        this.handleListenersForToggleSigningPage()
+        this.handleListenersForSigningButton()
+        this.handleListenersForAddForm()
 
         this.handleCommentBoxes()
         this.handleCommentQuote()
         this.handleLikeButtons()
     },
 
+    renderUserState() {
+        const rightSide = document.querySelector(".user-info")
+
+        if (this.state.waitingAuthor)
+            rightSide.innerHTML = `<p class="user-info_name">Аноним</p>
+                <button class="little-button" id="toggle-user">Войти</button>`
+        else
+            rightSide.innerHTML = `<img src="https://gitextensions.github.io/assets/images/blacktocat.png" alt="cat">
+                <p class="user-info_name">${API.login}</p>
+                <button class="little-button" id="toggle-user">Выйти</button>`
+
+        document.getElementById("toggle-user").addEventListener("click", () => {
+            if (this.state.waitingAuthor)
+                this.state.singingAuthor = !this.state.singingAuthor
+            else
+                this.state.waitingAuthor = true
+
+            API.username = ""
+            API.login    = ""
+            API.token    = ""
+            API.saveSigningData()
+
+            this.renderUserState()
+            this.renderApp()
+        })
+    },
+
 
     /* start working */
 
-    start() {
-        this.btnSubmit.disabled = true
+    start(login = "") {
+        if (login)
+            this.state.waitingAuthor = false
 
-        this.handleListenersForAddForm()
+        this.renderUserState()
+
+        if (this.btnSubmit)
+            this.btnSubmit.disabled = true
 
         comments.getCommentsFromServer()
     },

@@ -53,6 +53,7 @@ body::-webkit-scrollbar-thumb {
 
 .mode {
   margin-bottom: 45px;
+  cursor: default;
   box-shadow: 0 63px 0 0 var(--shadow); /* bar */
 
   &.flex {
@@ -148,6 +149,25 @@ body::-webkit-scrollbar-thumb {
 
 .arm-changed {
   left: 19px;
+}
+
+.user-info {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  .user-info_name {
+    color: var(--pear);
+  }
+}
+
+.little-button {
+  color: white;
+  background: var(--others);
+  border: 3px solid var(--others);
+  border-radius: 3px;
 }
 
 .comments,
@@ -333,16 +353,21 @@ body::-webkit-scrollbar-thumb {
   border: 3px solid white;
   box-sizing: border-box;
   outline: none;
+  padding: 11px 22px;
+
+  &:disabled {
+    color: white;
+    border-color: var(--disabled);
+  }
 }
 
 .input--short {
   width: 300px;
-  padding: 11px 22px;
 }
 
 .input--big {
   width: 100%;
-  padding: 22px;
+  padding-block: 22px;
   resize: none;
 }
 

@@ -1,10 +1,10 @@
 
 export const thumb = {
-    root: document.querySelector(":root"),
-    lblLeft: document.getElementById("cute-mode"),
+    root:     document.querySelector(":root"),
+    lblLeft:  document.getElementById("cute-mode"),
     lblRight: document.getElementById("devil-mode"),
-    btnSlot: document.getElementById("slot-button"),
-    btnArm: document.getElementById("arm-button"),
+    btnSlot:  document.getElementById("slot-button"),
+    btnArm:   document.getElementById("arm-button"),
 
     times: 0,
 
@@ -15,12 +15,12 @@ export const thumb = {
         this.btnArm.classList.remove("arm-changed")
 
         // set usual colors
-        this.root.style.setProperty("--shadow", "var(--back)")
-        this.root.style.setProperty("--scroll", "var(--pear)")
-        this.root.style.setProperty("--active", "var(--pear)")
-        this.root.style.setProperty("--disabled", "gray")
-        this.root.style.setProperty("--mine", "var(--green)")
-        this.root.style.setProperty("--others", "var(--purple)")
+        this.root.style.setProperty("--shadow",       "var(--back)")
+        this.root.style.setProperty("--scroll",       "var(--pear)")
+        this.root.style.setProperty("--active",       "var(--pear)")
+        this.root.style.setProperty("--disabled",     "gray")
+        this.root.style.setProperty("--mine",         "var(--green)")
+        this.root.style.setProperty("--others",       "var(--purple)")
         this.root.style.setProperty("--heart-empty", `url("./img/heart-standard-empty.svg")`)
         this.root.style.setProperty("--heart-filled", `url("./img/heart-standard-filled.svg")`)
 
@@ -33,13 +33,13 @@ export const thumb = {
         this.btnArm.classList.add("arm-changed")
 
         // set unusual colors
-        this.root.style.setProperty("--shadow", "#f00")
-        this.root.style.setProperty("--scroll", "var(--red)")
-        this.root.style.setProperty("--active", "#ec3030")
-        this.root.style.setProperty("--disabled", "#9a4242")
-        this.root.style.setProperty("--mine", "#ec7630")
-        this.root.style.setProperty("--others", "var(--red)")
-        this.root.style.setProperty("--heart-empty", `url("./img/heart-devil-empty.svg")`)
+        this.root.style.setProperty("--shadow",       "#f00")
+        this.root.style.setProperty("--scroll",       "var(--red)")
+        this.root.style.setProperty("--active",       "#ec3030")
+        this.root.style.setProperty("--disabled",     "#9a4242")
+        this.root.style.setProperty("--mine",         "#ec7630")
+        this.root.style.setProperty("--others",       "var(--red)")
+        this.root.style.setProperty("--heart-empty",  `url("./img/heart-devil-empty.svg")`)
         this.root.style.setProperty("--heart-filled", `url("./img/heart-devil-filled.svg")`)
 
         this.showEnoughTimes()
