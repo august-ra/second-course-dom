@@ -1,5 +1,6 @@
 import { API } from "./api.js"
 import { DOM } from "./DOM.js"
+import { format } from "date-fns";
 
 
 export const comments = {
@@ -12,7 +13,7 @@ export const comments = {
         this.data.push({
             id:      count,
             name:    name,
-            date:    new Date().print(),
+            date:    format(new Date(), "yyyy-MM-dd hh.mm.ss"),
             quoteID: quoteID,
             comment: comment,
             marks:   0,
@@ -106,7 +107,7 @@ export const comments = {
                     return {
                         id:      record.id,
                         name:    record.author.name,
-                        date:    new Date(record.date).print(),
+                        date:    format(new Date(record.date), "yyyy-MM-dd hh.mm.ss"),
                         quoteID: "",
                         comment: record.text,
                         marks:   record.likes,
